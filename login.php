@@ -18,8 +18,8 @@
 					</a>
 				</div>
 				<h2 class="text-center">Log in</h2>
-				<p class="text-center">Enter your account details below.</p>
-				<form id="addForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" novalidate>
+				<p class="text-center text-secondary">Enter your account details below.</p>
+				<form id="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" novalidate>
 					<div class="form-group mr-3 ml-3">
 					    <label for="email">Email address</label>
 					    <input type="text" id="email" name="email" class="form-control" placeholder ="example@domain.com" value="<?php if(isset($_POST['email'])) echo $_POST['email']; ?>">
@@ -39,7 +39,7 @@
 	                   	    <input type="submit" name="submit" class="btn btn-outline-primary w-100" value="Log in">
 	                </div> 
 
-	                 <p class="text-center">Don't have an account? <a href="register.php">Register here</a></p>
+	                 <p class="text-center">Don't have an account? <a href="sign_up.php">Sign up</a></p>
 	                 <p class="text-center"><a href="reset_password.php">Forgot your password?</a></p>
 				</form>
 			</div>
