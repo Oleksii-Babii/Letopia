@@ -22,6 +22,7 @@ require_once $path_to_mysql_connect;
 $errors = [];
 $noError = true;
 
+
 function validate_form_input($input) {
     $input = trim($input); // Remove whitespace from the beginning and end of the string
 
@@ -108,7 +109,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
         }
     }
 
-
     // check if the email is provided and is valid
     if (empty($_POST['email'])) {
         $errors[] = 'Email is required.';
@@ -119,17 +119,35 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
         }
     }
 
-    if(!empty($errors)){
+    if($query = $db_connection->prepare("SELECT * FROM user WHERE email = ?")) {
+        // Bind parameters (s = string, i = int), username is a string so use "s"
+        $query->bind_param('s', $email);
+        $query->execute();
+        // Store the result so we can check if the account exists in the database.
+        $query->store_result();
+        if ($query->num_rows > 0) {
+            // Duplicate record found, display error message
+                $alert = <<<ALERT
+                <div class="text-dark alert alert-warning text-center mt-2" role="alert">
+                <h4><b>$email</b> record already exists. <a href ='login.php?email=$email'>Log In</a></h4>
+                </div>
+ALERT;
+            echo $alert;
+        } elseif (!empty($errors)) {
             GLOBAL $noError;
             $noError = false;
             foreach ($errors as $error) {
                 echo "<div class='alert alert-danger text-center mb-2' role='alert'>
-                     {$error}
+                    {$error}
                 </div>";
+            }
+        } else {
+            //Email verification
         }
-    } 
 
-
+        $query->close(); 
+    }
+    
 }
 
 ?>

@@ -38,7 +38,7 @@ main {
 
 
 #login , #signUp {
-  box-shadow: 5px 5px 5px 5px #666666;
+  box-shadow:3px 3px 3px 3px #666666;
   background-color: #ffffff;
    margin: auto;
    border-radius: 0.5rem;
