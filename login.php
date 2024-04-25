@@ -6,7 +6,7 @@
         <!-- connect bootstrap libraries -->
         <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
         <title>Login</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style/style.css">
 	</head>
 
 	<body id="loginPage">

@@ -37,9 +37,11 @@ main {
 
 
 
-#login , #signUp {
-  box-shadow:3px 3px 3px 3px #666666;
+#login , #signUp, #emailVerificationForm {
   background-color: #ffffff;
    margin: auto;
    border-radius: 0.5rem;
 }
+
+
+

@@ -1,5 +1,5 @@
 <?php 
-require_once ("session.php");
+require "session.php";
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -143,8 +143,16 @@ ALERT;
             }
         } else {
             //Email verification
-        }
+            // $_SESSION['firstName'] = $firstName;
+            // $_SESSION['lastName'] = $lastName;
+            // $_SESSION['password'] = $password;
+            // $_SESSION['email'] = $email;
 
+            $_SESSION['email'] = $email;
+            header("Location: email_verification.php");
+            exit();
+            
+        }
         $query->close(); 
     }
     
@@ -159,7 +167,7 @@ ALERT;
         <!-- connect bootstrap libraries -->
         <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
         <title>Login</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style/style.css">
 	</head>
     <body>
         <main>
