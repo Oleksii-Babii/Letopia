@@ -8,25 +8,34 @@ error_reporting(E_ALL);
 // Generate a random 6-digit code
 $code = rand(100000,999999);
 
-//mail('babii.oleksiii@gmail.com', 'Test', 'Test body');
-// The parameters
-// $to = 'babii.oleksiii@gmail.com';
-// $subject = 'the subject';
-// $message = 'hello';
-// $headers = 'From: webmaster@example.com' . "\r\n" . 'Reply-To:
-// webmaster@example.com' . "\r\n". 'X-Mailer: PHP/' .
-// phpversion();
-// // send
+$email = $_SESSION['email'];
+$firstName = $_SESSION['firstName'];
+$lastName = $_SESSION['lastName'];
+$title = 'Verify your email address';
+$body = "
+<html>
+	<head>
+  		<title>Your Verification Code</title>
+	</head>
+	<body>
+ 		<p>Dear $firstName $lastName,</p>
+ 		<p>Your verification code is: <strong>$code</strong></p>
+  		<p>Please use this code to verify your email address.</p>
+  		<p>Kind regards,</p>
+  		<p>Letopia Support</p>
+	</body>
+</html>
+";
 
-// mail($to, $subject, $message, $headers);
+mail($email, $title, $body, 'From: letopia@gmail.com');
+
+
+
 
 
 //if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['continue']) && isset($_SESSION['email'])) {
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['continue'])) {
-	$email = $_SESSION['email'];
-	$body = "body";
-	mail('babiy.olexiy@ukr.net', 'Title', $body, 'From: babii.oleksiii@gmail.com');
-
+	
 	GLOBAL $code;
 	echo $code;
 }

@@ -149,6 +149,8 @@ ALERT;
             // $_SESSION['email'] = $email;
 
             $_SESSION['email'] = $email;
+            $_SESSION['firstName'] = $firstName;
+            $_SESSION['lastName'] = $lastName;
             header("Location: email_verification.php");
             exit();
             
