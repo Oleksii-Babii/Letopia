@@ -22,24 +22,8 @@ require_once $path_to_mysql_connect;
 $errors = [];
 $noError = true;
 
-
-function validate_form_input($input) {
-    $input = trim($input); // Remove whitespace from the beginning and end of the string
-
-    //Remove carriage return characters
-    $input = str_replace("\r","", $input);
-    //Remove new line characters
-    $input = str_replace("\n","", $input);
-
-    if (empty($input)) {
-       return false; // Input is empty after trimming, so return false
-    }
-
-
-    $input = strip_tags($input); // Remove HTML and PHP tags
-    $input = htmlspecialchars($input, ENT_QUOTES, 'UTF-8'); // Convert special characters to HTML entities
-    return $input; // Return the sanitized input
-}
+//Get validate_form_input function
+require 'functions.php';
 
 
 // Checks if form is submitted via POST and sanitizes input to prevent XSS attacks.
@@ -152,7 +136,6 @@ ALERT;
         } else {
             //Email verification
 
-            $_SESSION['email'] = $email;
             $_SESSION['firstName'] = $firstName;
             $_SESSION['lastName'] = $lastName;
             $_SESSION['password'] = $passwordHash;
@@ -222,6 +205,8 @@ mysqli_close($db_connection);
     <body>
         <main>
             <div class="container mt-3">
+                <?php if(isset($_GET['approvedEmail']) && $_GET['approvedEmail'] == 'true'): ?>
+                <?php else: ?> 
                 <div class="row">
                     <div class="col-md-5 mt-3 w-50" id="signUp">
                         <h2 class="text-center mt-2">Sign up</h2>
@@ -279,6 +264,7 @@ mysqli_close($db_connection);
                     </div>
                 </div>
                  <h5 class="text-center mt-4">Already have an account? <a href="login.php">Login here</a></h5>
+                 <?php endif; ?>
             </div>
         </main>
     </body>
