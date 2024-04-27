@@ -141,6 +141,7 @@ ALERT;
             $_SESSION['password'] = $passwordHash;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+            
             header("Location: email_verification.php");
             exit();
             
