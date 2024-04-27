@@ -165,3 +165,12 @@ textarea { /* Adjust the width as needed */
   height: 5rem; /* Adjust the height as needed */
   resize: none; /* Disable resizing */
 }
+
+#table-container{
+  margin: 10%;
+  border-radius: 2rem;
+}
+
+.table{
+  border-radius: 2rem;
+}
