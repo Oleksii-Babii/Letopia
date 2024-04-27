@@ -6,6 +6,11 @@ main {
     margin: auto;
 }
 
+
+#signUpMain {
+  margin-top: 7rem;
+}
+
 .details {
     display: flex;
     justify-content: center;
