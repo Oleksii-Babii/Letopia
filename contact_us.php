@@ -1,9 +1,9 @@
 <?php
 require "session.php";
 
-ini_set('display_errors', 1);
-ini_set('dispaly_startup',1);
-error_reportion(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('dispaly_startup',1);
+// error_reportion(E_ALL);
 
 // Connect to the database
 // Check if we are on the live server or a local XAMPP environment
@@ -24,9 +24,65 @@ $noError = true;
 //Get validate_form_input function
 require 'functions.php';
 
+// Define addContact function
+function addContact($db_connection, $name, $email, $phone, $message){
+    $insertQuery = $db_connection->prepare("INSERT INTO contact_us (`name`, `email`,`phone`, `message`) VALUES (?, ?, ?, ?);");
+    $insertQuery->bind_param("ssss", $name, $email, $phone, $message);
+    $result = $insertQuery->execute();
+
+    if ($result) {
+        //Data inserted successfully. Display the corresponding message
+        $success = <<<SUCCESS
+        <div class="alert alert-success text-center" role="alert">
+            <h4 class="alert-heading">Congratulations!</h4>
+            <h5>Your message is sent to us.</h5>
+            <hr>
+        </div>
+        SUCCESS;
+        
+        echo $success;
+    } else {
+        echo "<p class='error'>Something went wrong: '.$insertQuery->error.'</p>";
+    }
+
+    $insertQuery->close();
+}
+
 // Checks if form is submitted via POST and sanitizes input to prevent XSS attacks.
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
-    
+
+    //check if the email is provided
+    if(empty($_POST['email'])){
+        $errors[] = 'Please enter your email';
+    }else{
+        $email = validate_form_input($_POST['email']);
+    }
+
+
+    //check if the full name is not empty
+    if(empty($_POST['full_name'])){
+        $errors[] = 'Please enter your full name';
+    }else{
+        $name = validate_form_input($_POST['full_name']);
+    }
+
+    //check if the phone in not empty
+    if(empty($_POST['phone'])){
+        $errors[] = 'Please enter your phone number';
+    }else{
+        $phone = validate_form_input($_POST['phone']);
+    }
+
+    if(empty($_POST['message'])){
+        $errors[] = 'Please enter your message';
+    }else{
+        $message = validate_form_input($_POST['message']);
+    }
+
+    if(empty($errors)){
+        addContact($db_connection, 'Ihor Tryndey', 'igortryn@gmail.com', '0665270221', 'hi');
+    }
+
 }
 
 ?>
@@ -43,11 +99,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
 <body>
     <main class="d-flex justify-content-center mt-5">
         <div id="login">
-            <div class="d-flex justify-content-end mt-2 mr-2">
-                <a href="index.php">
-                    <button type="button" id="closeButton" class="btn btn-outline-secondary">&#x2715;</button>
-                </a>
-            </div>
             <h2 class="text-center">Contact us</h2>
             <p class="text-center text-secondary">Enter your account details below.</p>
             <form id="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" novalidate>
@@ -78,8 +129,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
                 </div>
 
                 <div class="form-group mr-3 ml-3">
-                    <label for="phone">Your message</label>
-                    <textarea id="message" name="message" class="form-control" placeholder ="your message" value="<?php if(isset($_POST['message'])) echo $_POST['message']; ?>"></textarea>
+                    <label for="message">Your message</label>
+                    <textarea id="message" name="message" class="form-control" placeholder ="your message"  maxlength="50"><?php if(isset($_POST['message'])) echo $_POST['message']; ?></textarea>
                 </div>
 
                 <div class="form-group text-center mt-3 pr-3 pl-3">
