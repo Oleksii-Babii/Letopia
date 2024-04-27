@@ -138,7 +138,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
 
                 <div class="form-group mr-3 ml-3">
                     <label for="message">Your message</label>
-                    <textarea id="message" name="message" class="form-control" placeholder ="your message"  maxlength="50"><?php if(isset($_POST['message'])) echo $_POST['message']; ?></textarea>
+                    <textarea id="message" name="message" class="form-control" placeholder ="your message"><?php if(isset($_POST['message'])) echo $_POST['message']; ?></textarea>
                 </div>
 
                 <div class="form-group text-center mt-3 pr-3 pl-3">
