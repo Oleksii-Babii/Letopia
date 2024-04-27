@@ -1,9 +1,9 @@
 <?php
 require "session.php";
 
-// ini_set('display_errors', 1);
-// ini_set('dispaly_startup',1);
-// error_reportion(E_ALL);
+ini_set('display_errors', 1);
+ini_set('dispaly_startup',1);
+error_reporting(E_ALL);
 
 // Connect to the database
 // Check if we are on the live server or a local XAMPP environment
@@ -55,7 +55,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
     if(empty($_POST['email'])){
         $errors[] = 'Please enter your email';
     }else{
-        $email = validate_form_input($_POST['email']);
+        $email = trim($_POST['email']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email address.";
+        }
+        
     }
 
 
@@ -70,7 +74,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
     if(empty($_POST['phone'])){
         $errors[] = 'Please enter your phone number';
     }else{
-        $phone = validate_form_input($_POST['phone']);
+        $phone = validate_phone_number($_POST['phone']);
+
+        if ($phone === false) {
+          $errors[] = "Invalid phone number.";
+        }
     }
 
     if(empty($_POST['message'])){
@@ -80,7 +88,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
     }
 
     if(empty($errors)){
-        addContact($db_connection, 'Ihor Tryndey', 'igortryn@gmail.com', '0665270221', 'hi');
+        addContact($db_connection, $name, $email, $phone, $message);
     }
 
 }
