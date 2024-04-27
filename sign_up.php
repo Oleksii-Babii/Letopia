@@ -1,5 +1,6 @@
 <?php 
 require "session.php";
+require ('templates/header.php');
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -141,7 +142,7 @@ ALERT;
             $_SESSION['password'] = $passwordHash;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
-            
+
             header("Location: email_verification.php");
             exit();
             
@@ -164,9 +165,7 @@ ALERT;
             //Destroy the session data on the server
             session_destroy();
 
-            $insertQuery = $db_connection->prepare("INSERT INTO user (firstName, lastName, password, email, role) VALUES (?, ?, ?, ?, ?);");
-            $insertQuery->bind_param("sssss", $firstName, $lastName, $password, $email, $role);
-            $result = $insertQuery->execute();
+           
             //var_dump($result);
             if ($result) {
                 //Data inserted successfully. Display the corresponding message
@@ -193,19 +192,18 @@ SUCCESS;
 mysqli_close($db_connection);
 
 ?>
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 	<head>
 		 <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- connect bootstrap libraries -->
         <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
         <title>Login</title>
         <link rel="stylesheet" href="style/style.css">
 	</head>
-    <body>
-        <main>
-            <div class="container mt-3">
+    <body> -->
+        <main id="signUpMain">
+            <div class="container">
                 <?php if(isset($_GET['approvedEmail']) && $_GET['approvedEmail'] == 'true'): ?>
                 <?php else: ?> 
                 <div class="row">

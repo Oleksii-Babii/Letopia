@@ -37,7 +37,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     // Check and validate 'Eircode' field
     if (isset($_POST['eircode']) && !empty($_POST['eircode'])) {
         $eircode = validate_eircode($_POST['eircode']);
-
         if ($eircode === false) {
             $errors[] = "Invalid Eircode format eg. D08 Y14X.";
         }
@@ -45,6 +44,49 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     } else {
         $errors[] = "Eircode field is missing.";
     }
+
+    // Check and validate 'Rental Price' field
+    if(isset($_POST['rentalPrice']) && !empty($_POST['rentalPrice'])) {
+        $rentalPrice = validate_form_input($_POST['rentalPrice']);
+
+        if ($rentalPrice === false) {
+            $errors[] = "Rental Price is missing.";
+        }
+
+        if(!preg_match("/^\d+([.,]\d{1,2})?$/", $rentalPrice)) {
+            $errors[] = "Rental Price is invalid.";
+        }
+
+    } else {
+        $errors[] = "Rental Price is missing.";
+    }
+
+    // Check and validate 'Number of bedrooms' field
+    if (isset($_POST['numberOfbedrooms']) && !empty($_POST['numberOfbedrooms'])) {
+        $numberOfbedrooms = $_POST['numberOfbedrooms'];
+    } else {
+        $errors[] = "Number Of bedrooms is missing.";
+    }
+
+    // Check and validate 'Length of tenancy' field
+    if (isset($_POST['lengthOfTenancy']) && !empty($_POST['lengthOfTenancy'])) {
+        $lengthOfTenancy = $_POST['lengthOfTenancy'];
+    } else {
+        $errors[] = "Length of Tenancy is missing.";
+    }
+
+    // Check and validate 'Address' field
+    $address = htmlspecialchars($_POST['address'] ?? '');
+    if (!isset($address) || empty($address) || !validate_form_input($address)) {
+        $errors[] = "Please enter a valid address.";
+    }
+
+    // Check and validate 'Property Description' field
+    $description = htmlspecialchars($_POST['description'] ?? '');
+    if (!isset($description) || empty($description) || !validate_form_input($description)) {
+        $errors[] = "Please enter a valid Property Description.";
+    }
+
 
 }
 ?>
@@ -65,6 +107,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             <h2 class="text-center mt-3">Register New Property</h2>
             <div class="container">
                 <form id="propertyRegistrationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="mt-3" method="POST" novalidate>
+                    <?php
+                     if (!empty($errors)) {
+                        GLOBAL $noError;
+                        $noError = false;
+                        foreach ($errors as $error) {
+                            echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
+                            {$error}
+                        </div>";
+                        }
+                     } ?>
                 <div class="details">
                     <div id="propertyRegistration">
                         <h4>Property Details</h4>
@@ -80,16 +132,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                             </div>
 
                             <div class="form-group">
-                                <label for="costOfAppliance">Rental price (per month):</label>
+                                <label for="rentalPrice">Rental price (per month):</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="rentalPrice" name="rentalPrice" value="<?php if(isset($_POST['rentalPrice'])) echo $_POST['rentalPrice']; ?>" class="form-control" placeholder="ex. 1500" pattern="^\d+([.,]\d{1,2})?$" required>
+                                    <input type="text" class="form-control" id="rentalPrice" name="rentalPrice" value="<?php if(isset($_POST['rentalPrice'])) echo $_POST['rentalPrice']; ?>" class="form-control" placeholder="ex. 1500.00" pattern="^\d+([.,]\d{1,2})?$" required>
                                     <span class="input-group-text">€</span>
                                     <span class="input-group-text">0.00</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="numberOfbed">Number of bedrooms:</label>
+                                <label for="numberOfbedrooms">Number of bedrooms:</label>
                                 <select id="numberOfbedrooms" name="numberOfbedrooms" class="form-control" required>
                                     <option value=""<?php if (isset($_POST['numberOfbedrooms']) && $_POST['numberOfbedrooms'] == '') echo ' selected="selected"'; ?>>Choose...</option>
                                     <option value="1"<?php if (isset($_POST['numberOfbedrooms']) && $_POST['numberOfbedrooms'] == '1') echo ' selected="selected"'; ?>>1 bedroom</option>
@@ -110,7 +162,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
                             <div class="form-group">
                                 <label for="description">Property Description</label>
-                                <textarea id="propertyDescription" name="description" rows="3" cols="30" class="form-control"><?php if(isset($_POST['description'])) echo $_POST['description']; ?>
+                                <textarea id="description" name="description" rows="3" cols="30" class="form-control"><?php if(isset($_POST['description'])) echo $_POST['description']; ?>
                                 </textarea>
                             </div>
 
