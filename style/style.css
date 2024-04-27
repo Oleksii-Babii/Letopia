@@ -43,5 +43,100 @@ main {
    border-radius: 0.5rem;
 }
 
+.navbar.bg-light {
+  background-color: #4B3F64 !important;
+}
 
+.btn.btn-outline-success{
+  background-color: white;
+}
 
+.navbar-brand{
+  color: white;
+}
+
+.nav-link{
+   color: white;
+}
+
+.navbar-nav .nav-link.active {
+  color: yellow !important;
+}
+
+#title{
+  color: #C1121F;
+  text-align: center;
+  margin:3%;
+}
+
+.carousel.carousel-dark.slide{
+  width: 50%;
+  height: 50%;
+}
+
+#section-carusel{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-inner{
+  height: 25rem;
+}
+
+.carousel {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+footer{
+  height: 5rem;
+  background-color: #4B3F64;
+}
+
+section {
+  padding-top: 100px; /* Adjust the value as needed */
+}
+
+h5{
+  text-align: center;
+}
+
+#footer-logo{
+  height: 3rem;
+}
+
+footer{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.footer-container{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.text{
+  color: white;
+}
+
+#form-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  margin: 5%;
+  border-radius: 2rem;
+}
+
+#btn-form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-control.elements{
+  width: 3rem;
+}
