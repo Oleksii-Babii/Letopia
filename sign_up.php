@@ -12,7 +12,7 @@ if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
     $path_to_mysql_connect = '../../../mysql_connect.php';
 } else {
     // Path for the local XAMPP server
-    $path_to_mysql_connect = __DIR__ . '/../../../mysql_connect.php';
+    $path_to_mysql_connect = 'mysql_connect.php';
 }
 
 // Require the mysql_connect.php file using the determined path
@@ -103,7 +103,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
             $errors[] = "Your password must contain at least 8 characters, at least 1 letter, 1 number including at least 1 special character.";
         } else {
             $passwordAcceptable = true;
-            $password_hash = password_hash($password, PASSWORD_BCRYPT);
+            $passwordHash = password_hash($password, PASSWORD_BCRYPT);
         }
 
     } else {
@@ -151,14 +151,13 @@ ALERT;
             $noError = false;
         } else {
             //Email verification
-            // $_SESSION['firstName'] = $firstName;
-            // $_SESSION['lastName'] = $lastName;
-            // $_SESSION['password'] = $password;
-            // $_SESSION['email'] = $email;
 
             $_SESSION['email'] = $email;
             $_SESSION['firstName'] = $firstName;
             $_SESSION['lastName'] = $lastName;
+            $_SESSION['password'] = $passwordHash;
+            $_SESSION['email'] = $email;
+            $_SESSION['role'] = $role;
             header("Location: email_verification.php");
             exit();
             
@@ -166,7 +165,48 @@ ALERT;
         $query->close(); 
     }
     
+} elseif (isset($_GET['approvedEmail'])&& $_GET['approvedEmail'] == 'true'){
+    //checks if all the required variables are not empty
+        if (!empty($_SESSION['firstName']) && !empty($_SESSION['lastName']) && !empty($_SESSION['password']) && !empty($_SESSION['email']) && !empty($_SESSION['role'])) {
+            //Escape Inputs with the mysqli_real_escape_string.
+            $firstName = mysqli_real_escape_string($db_connection, $_SESSION['firstName']);
+            $lastName = mysqli_real_escape_string($db_connection, $_SESSION['lastName']);
+            $password = mysqli_real_escape_string($db_connection, $_SESSION['password']);
+            $email = mysqli_real_escape_string($db_connection, $_SESSION['email']);
+            $role = mysqli_real_escape_string($db_connection, $_SESSION['role']);
+
+            //Reset the session array
+            $_SESSION = [];
+            //Destroy the session data on the server
+            session_destroy();
+
+            $insertQuery = $db_connection->prepare("INSERT INTO user (firstName, lastName, password, email, role) VALUES (?, ?, ?, ?, ?);");
+            $insertQuery->bind_param("sssss", $firstName, $lastName, $password, $email, $role);
+            $result = $insertQuery->execute();
+            //var_dump($result);
+            if ($result) {
+                //Data inserted successfully. Display the corresponding message
+                $success = <<<SUCCESS
+                <div class="alert alert-success text-center" role="alert">
+                    <h4 class="alert-heading">Congratulations!</h4>
+                    <h5>Now you can rent your ideal accommodation.</h5>
+                    <hr>
+                </div>
+SUCCESS;
+                
+                echo $success;
+            } else {
+                echo "<p class='error'>Something went wrong: '.$insertQuery->error.'</p>";
+            }
+
+            $insertQuery->close();
+
+        }
+
 }
+
+// Close DB connection
+mysqli_close($db_connection);
 
 ?>
 <!DOCTYPE html>

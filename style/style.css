@@ -1,5 +1,5 @@
 body {
-    background-color: #f1f2f6;  
+    background-color: #f1f2f6; 
 }
 
 main {
@@ -52,9 +52,9 @@ main {
   background-color: #4B3F64 !important;
 }
 
-.btn.btn-outline-success{
+/*.btn.btn-outline-success{
   background-color: white;
-}
+}*/
 
 .navbar-brand{
   color: white;
