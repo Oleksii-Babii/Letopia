@@ -140,3 +140,23 @@ footer{
 .form-control.elements{
   width: 3rem;
 }
+
+.img-size{
+  width: 12rem;
+  height: 8rem;
+}
+
+.container-catalog{
+  border: 1px solid gray;
+  width: 12rem;
+  border-radius: 1rem;
+}
+
+#more{
+  text-align: right;
+}
+
+textarea { /* Adjust the width as needed */
+  height: 5rem; /* Adjust the height as needed */
+  resize: none; /* Disable resizing */
+}
