@@ -22,6 +22,7 @@ require_once $path_to_mysql_connect;
 // Create an empty array to store errors
 $errors = [];
 $noError = true;
+$alreadyExists = false;
 
 //Get validate_form_input function
 require 'functions.php';
@@ -125,12 +126,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
         $query->store_result();
         if ($query->num_rows > 0) {
             // Duplicate record found, display error message
-                $alert = <<<ALERT
-                <div class="text-dark alert alert-warning text-center mt-2" role="alert">
-                <h4><b>$email</b> record already exists. <a href ='login.php?email=$email'>Log In</a></h4>
-                </div>
-ALERT;
-            echo $alert;
+            GLOBAL $alreadyExists;
+            $alreadyExists = true;
         } elseif (!empty($errors)) {
             GLOBAL $noError;
             $noError = false;
@@ -142,6 +139,7 @@ ALERT;
             $_SESSION['password'] = $passwordHash;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+
 
             header("Location: email_verification.php");
             exit();
@@ -162,29 +160,41 @@ ALERT;
 
             //Reset the session array
             $_SESSION = [];
-            //Destroy the session data on the server
-            session_destroy();
 
-           
+            $insertQuery = $db_connection->prepare("INSERT INTO user (firstName, lastName, password, email, role) VALUES (?, ?, ?, ?, ?);");
+            $insertQuery->bind_param("sssss", $firstName, $lastName, $password, $email, $role);
+            $result = $insertQuery->execute();
             //var_dump($result);
             if ($result) {
-                //Data inserted successfully. Display the corresponding message
-                $success = <<<SUCCESS
-                <div class="alert alert-success text-center" role="alert">
-                    <h4 class="alert-heading">Congratulations!</h4>
-                    <h5>Now you can rent your ideal accommodation.</h5>
-                    <hr>
-                </div>
-SUCCESS;
-                
-                echo $success;
+                echo "aaaa";
+                //Get user role and id 
+                $stmt = $db_connection->prepare("SELECT * FROM user WHERE email = ?");
+                $stmt->bind_param("s", $email);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                // get the user data from the database
+                $row = $result->fetch_assoc();
+                $_SESSION["role"] = $row['role'];
+                $_SESSION["user"] = $row;
+
+                // Redirect the user to home page
+                header("location: index.php");
+                exit;
+            }
+            //Data inserted successfully. Display the corresponding message
+            $success = <<<SUCCESS
+            <div class="alert alert-success text-center" role="alert">
+                <h4 class="alert-heading">Congratulations!</h4>
+                <h5>Now you can rent your ideal accommodation.</h5>
+                <hr>
+            </div>
+SUCCESS;    
+            echo $success;
             } else {
                 echo "<p class='error'>Something went wrong: '.$insertQuery->error.'</p>";
             }
 
             $insertQuery->close();
-
-        }
 
 }
 
@@ -192,16 +202,7 @@ SUCCESS;
 mysqli_close($db_connection);
 
 ?>
-<!-- <!DOCTYPE html>
-<html lang="en">
-	<head>
-		 <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
-        <title>Login</title>
-        <link rel="stylesheet" href="style/style.css">
-	</head>
-    <body> -->
+
         <main id="signUpMain">
             <div class="container">
                 <?php if(isset($_GET['approvedEmail']) && $_GET['approvedEmail'] == 'true'): ?>
@@ -212,7 +213,7 @@ mysqli_close($db_connection);
                         <p class="text-center text-secondary">Please fill this form to create an account.</p>
                         <form id="registrationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  method="POST" novalidate>
                             <?php
-                                 if (!empty($errors)) {
+                                if (!empty($errors)) {
                                     GLOBAL $noError;
                                     $noError = false;
                                     foreach ($errors as $error) {
@@ -220,7 +221,18 @@ mysqli_close($db_connection);
                                         {$error}
                                     </div>";
                                     }
-                            } ?>
+                                }
+
+                                GLOBAL $alreadyExists;
+                                if($alreadyExists) {
+                                    $alert = <<<ALERT
+                                    <div class="text-dark alert alert-warning text-center mt-2" role="alert">
+                                        <h4><b>$email</b> record already exists. <a href ='login.php?email=$email'>Log In</a></h4>
+                                     </div>
+ALERT;
+                                     echo $alert;
+                                }
+                             ?>
 
                             <div class="form-group">
                                 <label class="mr-2">I am:</label>

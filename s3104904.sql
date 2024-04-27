@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 27, 2024 at 02:59 AM
+-- Generation Time: Apr 28, 2024 at 01:40 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -171,6 +171,7 @@ CREATE TABLE `property` (
   `rentalPrice` decimal(8,2) DEFAULT NULL,
   `numOfBedrooms` int(11) DEFAULT NULL,
   `lengthOfTenancy` int(11) DEFAULT NULL,
+  `description` varchar(400) DEFAULT NULL,
   `landlordId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -239,13 +240,19 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `firstName`, `lastName`, `password`, `email`, `role`) VALUES
-(1, 'Oleksii', 'Babii', '$2y$10$FVn.vT2wfdaYX0z1W0Z2uu3f6py6se13NI43dG2dmF0K1aa5hXRhS', 'babiy.olexiy@ukr.net', 'admin'),
 (2, 'John', 'Smith', '$2y$10$DAwzv4zCUtbv2.yyHEd2DuJWMRhj2wOqqtWwIofbixSFYsSSzmwAi', 'john.smith@gmail.com', 'tenant'),
 (3, 'Emily', 'Johnson', '$2y$10$BelkduIEhu8dPwjgcCWF2.rvQY6Az.sDOx/.0WLfDCE8yr5ALPmjS', 'emily.johnson@gmail.com', 'tenant'),
 (4, 'Jane', 'Doe', '$2y$10$cpUNmeAdYhYxCWmHUzgkaOySURkFMNWjFtWmfN0nylNPcJNUL5Eee', 'jane.doe@gmail.com', 'tenant'),
 (5, 'Alice', 'Murphy', '$2y$10$EYo1N9FfKeCOZwm8t1oHlu3wkIa1U.SZueGd1d.y.CS4Nkmeps/x.', 'alice.murphy@gmail.com', 'tenant'),
 (6, 'Michael', 'Johnson', '$2y$10$eSVf7Ie3hL0cuvF4W7u1KuXMmj.jl5YrYNv4hc3HcGxgwXo0ssS3m', 'michael.johnson@gmail.com', 'tenant'),
-(7, 'Daniel', 'Martinez', '$2y$10$peZY/xqZj91IY6QDkNiyfuo2RVOhE1HA8yks0fzng1yMIqzElb5/S', 'daniel.martinez@gamil.com', 'tenant');
+(7, 'Daniel', 'Martinez', '$2y$10$peZY/xqZj91IY6QDkNiyfuo2RVOhE1HA8yks0fzng1yMIqzElb5/S', 'daniel.martinez@gamil.com', 'tenant'),
+(8, 'Sophia', 'Davis', '$2y$10$6.O86kHFWFX8/DmXx4AjxOhenlyypyKN8aHfApsXIPCYHkQGEmCgC', 'sophia.davis@gmail.com', 'tenant'),
+(9, 'Olivia', 'Garcia', '$2y$10$svCPV1s2l1BUSfWARpTID.dOycQimCPEsIYGrtX7swnHtE7BMGqMG', 'olivia.garcia@gmail.com', 'landlord'),
+(10, 'Ryan', 'Garcia', '$2y$10$WJwoq7c8el6Mk3MIyyziJO3Y3uHBvz/H/v1vb4BK/LmLamFP/tTH6', 'ryan.garcia@gmail.com', 'landlord'),
+(11, 'Liam', 'O’Neill', '$2y$10$PXiUK8EIQdutBbNidhG5uuBOXE7x1zlzgPiVQVFHzRyAadND6XWE6', 'liam.neill@gmail.com', 'tenant'),
+(13, 'Oleksii', 'Babii', '$2y$10$yFtY39kcAeg9B.RF5m258.EwPpqvLuNQmuXzlITuyYXKdiKZZzU6i', 'babiy.olexiy@ukr.net', 'admin'),
+(14, 'David', 'Wilson', '$2y$10$7fBCMI4tUHXl7Qb/dvqaaOn6xCI87HFIKUIYPAo4.rA4gFdZUK.sC', 'david.wilson@gmail.com', 'landlord'),
+(15, 'Sarah', 'Taylor', '$2y$10$HQGpOmcCamaLURkFwGz6buQ3.DxacsN2OZPnT1ecp9Z9l0zstaNSC', 'sarah.taylor@gmail.com', 'landlord');
 
 -- --------------------------------------------------------
 
@@ -271,7 +278,8 @@ INSERT INTO `userlogin` (`id`, `name`, `password`, `email`, `role`) VALUES
 (3, 'Oleksii Babii', '$2y$10$YHBmZ8NNIK78E4Ei4DnmqO23r6JvmOLBKxoRQO3mzXboTCXck9Cw2', '5301122@ukr.net', NULL),
 (4, 'Oleksii Babii', '$2y$10$21gidbz1CHbXVMMaGaR24edAXpo9sdPKnyX4l5FWQrWF0maWHyvR6', 'babijoleksij468@gmail.com', NULL),
 (5, 'OLEKSII BABII', '$2y$10$uDqre50eqR6/yHd52x14texSQkI9LXVLtdZejUTUFz8DZpyLGQ/Gq', 'babiy.olexiy@ukr.net', NULL),
-(6, 'OLEKSII BABII', '$2y$10$80mjsgEaHpOQKn5dmCVL/O12DNQFcFRIjSg3zwSuNVEOuF5cPyWj6', 'babiy@ukr.net', NULL);
+(6, 'OLEKSII BABII', '$2y$10$80mjsgEaHpOQKn5dmCVL/O12DNQFcFRIjSg3zwSuNVEOuF5cPyWj6', 'babiy@ukr.net', NULL),
+(7, 'Oleksii Babii', '$2y$10$8mRDAUY1ftL0o9H2tFJujOAsR9I3QC2ghmXrLap6mY.824/5ZLLkS', 'bob.oconnor@gmail.com', NULL);
 
 -- --------------------------------------------------------
 
@@ -441,13 +449,13 @@ ALTER TABLE `testimonial`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `userlogin`
 --
 ALTER TABLE `userlogin`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`

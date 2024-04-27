@@ -1,5 +1,6 @@
 <?php
 require_once ("session.php");
+$authorized = '';
 
 function generate_nav_links() {
   $nav_links = [];
@@ -8,7 +9,7 @@ function generate_nav_links() {
     if ($_SESSION['user']['role'] === 'admin') {
       // admin links
       $nav_links = [
-        ['link' => 'index.html', 'text' => 'Home'],
+        ['link' => 'index.php', 'text' => 'Home'],
         ['link' => 'index_edit.php', 'text' => 'Edit Home'],
         ['link' => 'register_property.php', 'text' => 'Register Property'],
         ['link' => 'property_edit.php', 'text' => 'Property Edit'],
@@ -20,11 +21,12 @@ function generate_nav_links() {
         ['link' => 'contact_us_manage.php', 'text' => 'Messages'],
         ['link' => 'logout.php', 'text' => 'Logout']
       ];
+      GLOBAL $authorized;
       $authorized = true;
     } elseif($_SESSION['user']['role'] === 'landlord') {
       // landlord links
       $nav_links = [
-        ['link' => 'index.html', 'text' => 'Home'],
+        ['link' => 'index.php', 'text' => 'Home'],
         ['link' => 'register_property.php', 'text' => 'Register Property'],
         ['link' => 'property_edit.php', 'text' => 'Property Edit'],
         ['link' => 'inventory_details.php', 'text' => 'Inventory'],
@@ -33,25 +35,28 @@ function generate_nav_links() {
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'logout.php', 'text' => 'Logout']
       ]; 
+      GLOBAL $authorized;
       $authorized = true;
     } else {
       // tenant links
       $nav_links = [
-        ['link' => 'index.html', 'text' => 'Home'],
+        ['link' => 'index.php', 'text' => 'Home'],
         ['link' => 'tenancy_account.php', 'text' => 'My Tenancy'],
         ['link' => 'testimonial_add.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'logout.php', 'text' => 'Logout']
       ];
+      GLOBAL $authorized;
       $authorized = true;
     }
   } else {
     // Public links
     $nav_links = [
-      ['link' => 'index.html', 'text' => 'Home'],
+      ['link' => 'index.php', 'text' => 'Home'],
       ['link' => 'testimonials.php', 'text' => 'Testimonials'],
       ['link' => 'contact_us.php', 'text' => 'Contact Us'],
     ];
+    GLOBAL $authorized;
     $authorized = false;
   }
 
@@ -90,10 +95,14 @@ function generate_nav_links() {
                     GLOBAL $authorized;
                     if($authorized) {
                       $button = <<<BUTTON
-                      <a href="logout.php">
-                        <button type="button" class="btn btn-dark">Log out</button>
-                      </a>
+                      <div class="d-grid gap-2 d-md-block">
+                        <a href="logout.php">
+                          <button type="button" class="btn btn-dark">Log out</button>
+                        </a>
+                      </div>
                     BUTTON;
+
+                    echo $button;
                     } else {
                       $buttons = <<<BUTTONS
                       <div class="d-grid gap-2 d-md-block">

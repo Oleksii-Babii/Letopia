@@ -1,5 +1,23 @@
 <?php
-echo 'hello world';
+require "session.php";
+require ('templates/header.php');
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Connect to the database
+// Check if we are on the live server or a local XAMPP environment
+if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
+    // Path for the Knuth server
+    $path_to_mysql_connect = '../../../mysql_connect.php';
+} else {
+    // Path for the local XAMPP server
+    $path_to_mysql_connect = 'mysql_connect.php';
+}
+
+// Require the mysql_connect.php file using the determined path
+require_once $path_to_mysql_connect;
 
 //dispaly_property_results();
 function dispaly_property_results(){
@@ -20,55 +38,6 @@ function dispaly_property_results(){
     ';
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">   
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="style/style.css">
-    <title>Document</title>
-</head>
-<body >
-    <header class="fixed-top">
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container-fluid" >
-              <a href="#"><img src="additionalResources/logo.png" alt="logo image"></a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Testimonials</a>
-                  </li>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Commercial
-                    </a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Home</a></li>
-                      <li><a class="dropdown-item" href="#">Features</a></li>
-                      <li><a class="dropdown-item" href="#">Pricing</a></li>
-                      <li><a class="dropdown-item" href="#">FAQs</a></li>
-                      <li><a class="dropdown-item" href="#">About</a></li>
-                    </ul>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link">Contact us</a>
-                  </li>
-                </ul>
-                <div class="d-grid gap-2 d-md-block">
-                    <button type="button" class="btn btn-warning">Log in</button>
-                    <button type="button" class="btn btn-dark">Sign up</button>
-                </div>
-              </div>
-            </div>
-          </nav>
-    </header>
 
     <section>
         <h1 id="title">Deals of the week</h1>
