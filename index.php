@@ -1,7 +1,7 @@
 <?php
 echo 'hello world';
 
-// dispaly_property_results();
+//dispaly_property_results();
 function dispaly_property_results(){
     echo '
     <div class="container-catalog">
