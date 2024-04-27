@@ -11,7 +11,12 @@ main {
     justify-content: center;
 }
 
-#userDetails{
+#propertyDescription {
+    height: 9rem;
+}
+
+
+#userDetails, #propertyRegistration{
     width: 40%;
 }
 #buttons{

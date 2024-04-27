@@ -44,6 +44,19 @@ function validate_form_input($input) {
 
 // Checks if form is submitted via POST and sanitizes input to prevent XSS attacks.
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
+
+    //Check 'Role' field
+    if(isset($_POST['role'])){
+        //Prevent the user from changing the role to admin manually 
+        if($_POST['role'] == 'landlord') {
+            $role = 'landlord';
+        } else {
+            $role = 'tenant';
+        }
+    } else {
+        $errors[] = "Role is missing.";
+    }
+
     // Check and validate 'First Name' field
     if(isset($_POST['firstName']) && !empty($_POST['firstName'])) {
         $firstName = validate_form_input($_POST['firstName']);
@@ -136,11 +149,6 @@ ALERT;
         } elseif (!empty($errors)) {
             GLOBAL $noError;
             $noError = false;
-            foreach ($errors as $error) {
-                echo "<div class='alert alert-danger text-center mb-2' role='alert'>
-                    {$error}
-                </div>";
-            }
         } else {
             //Email verification
             // $_SESSION['firstName'] = $firstName;
@@ -179,6 +187,24 @@ ALERT;
                         <h2 class="text-center mt-2">Sign up</h2>
                         <p class="text-center text-secondary">Please fill this form to create an account.</p>
                         <form id="registrationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  method="POST" novalidate>
+                            <?php
+                                 if (!empty($errors)) {
+                                    GLOBAL $noError;
+                                    $noError = false;
+                                    foreach ($errors as $error) {
+                                        echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
+                                        {$error}
+                                    </div>";
+                                    }
+                            } ?>
+
+                            <div class="form-group">
+                                <label class="mr-2">I am:</label>
+                                <input type="radio" name="role" value="tenant"
+                                <?php if (isset($_POST['role']) && $_POST['role'] == "tenant") echo 'checked="checked"';?>>Tenant
+                                <input class="ml-2" type="radio" name="role" value="landlord"
+                                <?php if (isset($_POST['role']) && $_POST['role'] == "landlord") echo 'checked="checked"';?>>Landlord
+                            </div> 
 
                             <div class="form-group">
                                 <label for="firstName">First Name</label>
