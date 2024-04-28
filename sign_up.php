@@ -174,7 +174,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
                 $result = $stmt->get_result();
                 // get the user data from the database
                 $row = $result->fetch_assoc();
-                $_SESSION["role"] = $row['role'];
+                //$_SESSION["role"] = $row['role'];
                 $_SESSION["user"] = $row;
 
                 // Redirect the user to home page

@@ -16,7 +16,7 @@ function generate_nav_links() {
         ['link' => 'inventory_details.php', 'text' => 'Inventory'],
         ['link' => 'tenancies.php', 'text' => 'Tenancies'],
         ['link' => 'landlords.php', 'text' => 'Landlords'],
-        ['link' => 'testimonial_add.php', 'text' => 'Testimonials'],
+        ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'contact_us_manage.php', 'text' => 'Messages'],
         ['link' => 'logout.php', 'text' => 'Logout']
@@ -31,7 +31,7 @@ function generate_nav_links() {
         ['link' => 'property_edit.php', 'text' => 'Property Edit'],
         ['link' => 'inventory_details.php', 'text' => 'Inventory'],
         ['link' => 'landlord_account.php', 'text' => 'My Account'],
-        ['link' => 'testimonial_add.php', 'text' => 'Testimonials'],
+        ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'logout.php', 'text' => 'Logout']
       ]; 
@@ -42,7 +42,7 @@ function generate_nav_links() {
       $nav_links = [
         ['link' => 'index.php', 'text' => 'Home'],
         ['link' => 'tenancy_account.php', 'text' => 'My Tenancy'],
-        ['link' => 'testimonial_add.php', 'text' => 'Testimonials'],
+        ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'logout.php', 'text' => 'Logout']
       ];
