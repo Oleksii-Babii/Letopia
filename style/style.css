@@ -152,13 +152,13 @@ footer{
 }
 
 .img-size{
-  width: 12rem;
-  height: 8rem;
+  width: 450px;
+  height: 253px;
 }
 
 .container-catalog{
   border: 1px solid gray;
-  width: 12rem;
+  width: 450px;
   border-radius: 1rem;
 }
 
@@ -178,4 +178,31 @@ textarea { /* Adjust the width as needed */
 
 .table{
   border-radius: 1rem;
+}
+
+.container-serch{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns with equal width */
+
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns with equal width */
+  gap: 20px; /* Gap between grid items */
+  justify-content: center; /* Center the grid */
+}
+.container-catalog {
+  background-color: white;
+  width: 450px;
+}
+.container-catalog img {
+  width: 100%;
+  height: auto;
+}
+.container-catalog > div {
+  width: 100%;
+}
+.container-catalog p {
+  margin-bottom: 0.5rem;
 }
