@@ -1,43 +1,43 @@
-<?php
+ <?php
 require "session.php";
 require ('templates/header.php');
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
-// Connect to the database
-// Check if we are on the live server or a local XAMPP environment
-if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
-    // Path for the Knuth server
-    $path_to_mysql_connect = '../../../mysql_connect.php';
-} else {
-    // Path for the local XAMPP server
-    $path_to_mysql_connect = 'mysql_connect.php';
-}
+// // Connect to the database
+// // Check if we are on the live server or a local XAMPP environment
+// if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
+//     // Path for the Knuth server
+//     $path_to_mysql_connect = '../../../mysql_connect.php';
+// } else {
+//     // Path for the local XAMPP server
+//     $path_to_mysql_connect = 'mysql_connect.php';
+// }
 
-// Require the mysql_connect.php file using the determined path
-require_once $path_to_mysql_connect;
+// // Require the mysql_connect.php file using the determined path
+// require_once $path_to_mysql_connect;
 
-//dispaly_property_results();
-function dispaly_property_results(){
-    echo '
-    <div class="container-catalog">
-        <p>appartment1, Doderbank</p>
-        <div >
-            <img src="additionalResources\appartment1-slideshow.jpg" class="img-size">
-            <div style=" width: 12rem;">
-                <p>$355,000 - Appartment</p>
-                <p>bespoke area dilighted to present this spacios one bed....</p><span id="more"><a href="#">More detailes &raquo;</a></span>
+// //dispaly_property_results();
+// function dispaly_property_results(){
+//     echo '
+//     <div class="container-catalog">
+//         <p>appartment1, Doderbank</p>
+//         <div >
+//             <img src="additionalResources\appartment1-slideshow.jpg" class="img-size">
+//             <div style=" width: 12rem;">
+//                 <p>$355,000 - Appartment</p>
+//                 <p>bespoke area dilighted to present this spacios one bed....</p><span id="more"><a href="#">More detailes &raquo;</a></span>
                 
-            </div>
-        </div>
-    </div>
+//             </div>
+//         </div>
+//     </div>
     
     
-    ';
-}
-?>
+//     ';
+// }
+?> 
 
     <section>
         <h1 id="title">Deals of the week</h1>
@@ -135,8 +135,57 @@ function dispaly_property_results(){
             </form>
         </div>
     </section>
+    <div style="display: flex; justify-content: center;">
+    <div class="grid-container">
+    <?php
+            // Connect to the database
+            // Check if we are on the live server or a local XAMPP environment
+            if($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie'){
+                // Path for the Knuth server
+                $path_to_mysql_connect = '../../../mysql_connect.php';
+            }else{
+                // Path for the local XAMPP server
+                $path_to_mysql_connect = 'mysql_connect.php';
+            }
 
-    <footer>
+            // Require the mysql_connect.php file using the determined path
+            require_once $path_to_mysql_connect;
+
+            //echo "demo here";
+
+            // $stmt = "SELECT DISTINCT * FROM property
+            // inner join property_photo on property.id = property_photo.propertyId"; // Removed unnecessary parentheses
+
+            $stmt = "SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                            (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
+                    FROM property";
+
+
+            $result = $db_connection->query($stmt);
+
+            if($result->num_rows > 0){
+                
+                while($row = $result->fetch_assoc()){
+                    //echo $row['id'] . " " . $row['address'] . " " . $row['eircode'] . " " . $row['rentalPrice'] . " " . $row['numOfBedrooms']." " . $row['photo']."<br>"; // Corrected concatenation and added proper spacing
+                    echo "
+                        <div class='container-catalog' style='margin: 3rem'>
+                            <p style='margin: 1rem;'>". $row['address']."</p>
+                            <div>
+                                <img src='". $row['photo']."' class='img-size'>
+                                <div>
+                                    <p style='margin: 1rem;'>". $row['rentalPrice'] . " - Apartment</p>
+                                    <p style='margin: 1rem;'>". $row['description'] . "</p>
+                                    <span ><a href='#' style='text-decoration: none;'><p style='text-align: right; margin: 1rem;' >More details &raquo;</p></a></span>                   
+                                </div>
+                            </div>
+                        </div>";
+
+                }
+            }
+            ?>
+    </div>
+    </div>
+    <!-- <footer>
         <div class="footer-container">
             <p class="text">&copy;2024 Letopia, Inc</p>
         </div>
@@ -148,7 +197,7 @@ function dispaly_property_results(){
         <div class="footer-container">
             <p class="text">Contact us</p>
         </div>
-    </footer>
+    </footer> -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
 </body>
 </html>
