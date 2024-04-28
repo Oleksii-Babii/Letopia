@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 01:40 AM
+-- Generation Time: Apr 28, 2024 at 10:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,6 +67,15 @@ CREATE TABLE `contact_us` (
   `phone` varchar(13) DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contact_us`
+--
+
+INSERT INTO `contact_us` (`id`, `name`, `email`, `phone`, `message`) VALUES
+(1, 'Oleksii', 'babiy.olexiy@ukr.net', '+353852006023', 'Hi'),
+(2, 'Oleksii', 'babiy.olexiy@ukr.net', '+353852006023', 'Hi'),
+(3, 'Oleksii', 'babiy.olexiy@ukr.net', '+353852006023', 'Hi');
 
 -- --------------------------------------------------------
 
@@ -175,6 +184,17 @@ CREATE TABLE `property` (
   `landlordId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `property`
+--
+
+INSERT INTO `property` (`id`, `address`, `eircode`, `rentalPrice`, `numOfBedrooms`, `lengthOfTenancy`, `description`, `landlordId`) VALUES
+(51, '246 Maple Street, Dublin 8, County Dublin, \\r\\nIreland                                 ', 'D08 Y15X', 1800.00, 1, 12, 'City life meets village lifestyle in this luxury apartment community in Dublin 8.  Discover a unique combination of fully furnished designer apartments and an unmatched range of exclusive amenities, with an on-site management suite plus concierge service. Giving you the peace of mind you need and the lifestyle you&#039;ll love.                                ', 15),
+(52, 'Occu Belcamp Manor, Belcamp Manor, Dublin 17                                                        ', 'D17 Y15S', 3250.00, 2, 6, 'Life with Occu meets 5 acres of landscaped grounds with courtyards and open space at Occu Belcamp Manor. Our homes are built to the highest standards and finished in signature Occu style. Modern frontages give way to smart, welcoming interiors - with all the home comforts our residents require. Featuring private gardens, houses at Occu Belcamp Manor provide plenty of space for growing and establis', 15),
+(53, 'Griffith Wood, Griffith Avenue, Drumcondra, Dublin 9                                ', 'D09 F12A', 2450.00, 3, 12, 'Located on the prestigious Griffith Avenue in Dublin 9, Griffith Wood offers a 3-bedroom rental home. With the finest urban facilities in a parkland setting, Griffith Wood is where city life meets suburban tranquillity to give you the best of both worlds. Not only will residents benefit from a professional service, where all the homes are meticulously designed and furnished for modern living; spac', 10),
+(54, 'Quayside Quarter, Dublin Landings, North Wall Quay, Dublin 1                          ', 'D01 DE45', 2150.00, 2, 3, 'Experience a better kind of renting in Quaysdie Quarter. Nestled inside of Dublin Landings, located on the riverside in the heart of the docklands, our apartments are perfect for those looking for comfortable riverside living right in the heart of the city. Sitting on the peninsula of the river, our premium units benefit from uninterrupted views over the River Liffey, whilst our standard units ove', 10),
+(55, 'Sandford Lodge , Sandford Lodge, Ranelagh, Dublin 6                               ', 'D06 D12S', 2196.00, 2, 6, 'This secluded and private 2-bedroom apartment in the heart of Ranelagh village, framed by tall trees and lush parks, offers you a residence near green recreational areas in one of the most popular parts of the city.                                 ', 9);
+
 -- --------------------------------------------------------
 
 --
@@ -185,6 +205,34 @@ CREATE TABLE `property_photo` (
   `propertyId` int(11) NOT NULL,
   `photo` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `property_photo`
+--
+
+INSERT INTO `property_photo` (`propertyId`, `photo`) VALUES
+(51, 'propertyImages/51/bedroom.jpeg'),
+(51, 'propertyImages/51/kitchen.jpeg'),
+(51, 'propertyImages/51/living_room.jpeg'),
+(52, 'propertyImages/52/bathroom.jpeg'),
+(52, 'propertyImages/52/kitchen.jpeg'),
+(52, 'propertyImages/52/kitchen2.jpeg'),
+(52, 'propertyImages/52/living_room.jpeg'),
+(52, 'propertyImages/52/outside.jpeg'),
+(53, 'propertyImages/53/bedroom1.jpeg'),
+(53, 'propertyImages/53/hall.jpeg'),
+(53, 'propertyImages/53/outside.jpeg'),
+(53, 'propertyImages/53/outside2.jpeg'),
+(54, 'propertyImages/54/bedroom.jpeg'),
+(54, 'propertyImages/54/bedroom2.jpeg'),
+(54, 'propertyImages/54/kinchen1.jpeg'),
+(54, 'propertyImages/54/kitchen2.jpeg'),
+(54, 'propertyImages/54/outside.jpeg'),
+(54, 'propertyImages/54/outside3.jpeg'),
+(55, 'propertyImages/55/bedroom.jpeg'),
+(55, 'propertyImages/55/kitchen.jpeg'),
+(55, 'propertyImages/55/living_room.jpeg'),
+(55, 'propertyImages/55/living_room2.jpeg');
 
 -- --------------------------------------------------------
 
@@ -219,6 +267,13 @@ CREATE TABLE `testimonial` (
   `comment` varchar(255) NOT NULL,
   `authorId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `testimonial`
+--
+
+INSERT INTO `testimonial` (`id`, `isApproved`, `serviceName`, `date`, `comment`, `authorId`) VALUES
+(1, 0, 'Renting an apartment', '2024-04-28', 'Conerney Estate Agents rent a number of my retail and industrial properties in Dublin City. I have to say, during the time I’ve been dealing with them, they have filled all vacant units and managed the tenants brilliantly.', 6);
 
 -- --------------------------------------------------------
 
@@ -419,7 +474,7 @@ ALTER TABLE `appliances`
 -- AUTO_INCREMENT for table `contact_us`
 --
 ALTER TABLE `contact_us`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `feature_box`
@@ -437,13 +492,13 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `property`
 --
 ALTER TABLE `property`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `testimonial`
 --
 ALTER TABLE `testimonial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `user`

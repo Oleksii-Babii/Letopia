@@ -192,6 +192,54 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                     // Close the prepared statement
                     $insertPhoto->close();
 
+                    //After successful registration send an email confirmation
+                    // Email subject
+                    $subject = "Property Registration Notification";
+                    // Email message with HTML markup
+                    $message = "
+                    <html>
+                    <head>
+                    <title>Test Email</title>
+                    <style>
+                      body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f2f2f2;
+                        color: #333;
+                      }
+                      .container {
+                        width: 80%;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #fff;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                      }
+                    </style>
+                    </head>
+                    <body>
+                      <div class='container'>
+                        <h1>Dear $firstName,</h1>
+                        <p>You received this message because you recently registered a property in your Letopia account.<br/></p>
+                        <p>If you have any quastions, reach out to us at letopia@gmail.com</p>
+                        <p>Kind regards,</p>
+                        <h3>Letopia Support Team</h3>
+                      </div>
+                    </body>
+                    </html>
+                    ";
+
+                    $from = "letopia@gmail.com";
+
+
+                    // Header for sender's email
+                    $headers = "From: $from\r\n";
+                    $headers .= "MIME-Version: 1.0\r\n";
+                    $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+
+                    // Send email
+                    mail($email, $subject, $message, $headers);
+
+
                     header("Location: " . htmlspecialchars($_SERVER['PHP_SELF']) . "?registred=true");
                     exit();  
                 } 
@@ -216,7 +264,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             <?php if(isset($_GET['registred']) && $_GET['registred'] == 'true'): ?>
                 <div class="alert alert-success text-center mt-3" role="alert">
                     <h4 class="alert-heading">Well done!</h4>
-                    <h5>New property registred successfully</h5>
+                    <h5>New property registred successfully. A confirmation email has been sent.</h5>
                     <hr>
                 </div>
             <?php endif; ?>
