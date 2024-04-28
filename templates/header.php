@@ -53,7 +53,7 @@ function generate_nav_links() {
     // Public links
     $nav_links = [
       ['link' => 'index.php', 'text' => 'Home'],
-      ['link' => 'testimonials.php', 'text' => 'Testimonials'],
+      ['link' => 'testimonial.php', 'text' => 'Testimonials'],
       ['link' => 'contact_us.php', 'text' => 'Contact Us'],
     ];
     GLOBAL $authorized;
