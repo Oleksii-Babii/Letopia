@@ -82,7 +82,7 @@ require ('templates/header.php');
           </div>
         </div>
         <div id="form-container">
-            <form class="row g-3" action="POST">
+            <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="col-auto">
                 <label for="staticEmail2" >Area (e.g. D08):</label>
                 <input type="text" readonly class="form-control" id="staticEmail2" value="email@example.com">
@@ -130,7 +130,7 @@ require ('templates/header.php');
                     </select>
                 </div>
                 <div class="form-group" id="btn-form">
-                <button type="submit" class="btn btn-primary mb-3" >Search &#128269;</button>
+                <button type="submit" class="btn btn-primary mb-3" value="Submit" name="search">Search &#128269;</button>
                 </div>
             </form>
         </div>
@@ -155,7 +155,11 @@ require ('templates/header.php');
 
             // $stmt = "SELECT DISTINCT * FROM property
             // inner join property_photo on property.id = property_photo.propertyId"; // Removed unnecessary parentheses
-
+            if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])){
+                echo "Hello";
+                //header("Location: inxex.php#form-container");
+                //exit();
+            }else{
             $stmt = "SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
                             (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                     FROM property";
@@ -182,9 +186,11 @@ require ('templates/header.php');
 
                 }
             }
+        }
             ?>
     </div>
     </div>
+
     <!-- <footer>
         <div class="footer-container">
             <p class="text">&copy;2024 Letopia, Inc</p>
