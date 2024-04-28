@@ -136,7 +136,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 	                </div> 
 
 	                 <p class="text-center">Don't have an account? <a href="sign_up.php">Sign up</a></p>
-	                 <p class="text-center"><a href="reset_password.php">Forgot your password?</a></p>
+	                 <p class="text-center"><a href="forgot_password.php">Forgot your password?</a></p>
 				</form>
 			</div>
 		</main>

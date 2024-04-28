@@ -7,7 +7,7 @@ main {
 }
 
 
-#signUpMain, #registerPropertyMain {
+#signUpMain, #registerPropertyMain,#forgotPassword {
   margin-top: 7rem;
 }
 
@@ -48,6 +48,7 @@ main {
 
 
 #login , #signUp, #emailVerificationForm {
+
   background-color: #ffffff;
    margin: auto;
    border-radius: 0.5rem;
