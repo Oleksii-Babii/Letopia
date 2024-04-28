@@ -19,7 +19,6 @@ function generate_nav_links() {
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'contact_us_manage.php', 'text' => 'Messages'],
-        ['link' => 'logout.php', 'text' => 'Logout']
       ];
       GLOBAL $authorized;
       $authorized = true;
@@ -33,7 +32,6 @@ function generate_nav_links() {
         ['link' => 'landlord_account.php', 'text' => 'My Account'],
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
-        ['link' => 'logout.php', 'text' => 'Logout']
       ]; 
       GLOBAL $authorized;
       $authorized = true;
@@ -44,7 +42,6 @@ function generate_nav_links() {
         ['link' => 'tenancy_account.php', 'text' => 'My Tenancy'],
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
-        ['link' => 'logout.php', 'text' => 'Logout']
       ];
       GLOBAL $authorized;
       $authorized = true;

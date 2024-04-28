@@ -166,7 +166,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
             $result = $insertQuery->execute();
             //var_dump($result);
             if ($result) {
-                echo "aaaa";
                 //Get user role and id 
                 $stmt = $db_connection->prepare("SELECT * FROM user WHERE email = ?");
                 $stmt->bind_param("s", $email);

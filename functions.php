@@ -17,15 +17,14 @@ function validate_form_input($input) {
     return $input; // Return the sanitized input
 }
 
-function validate_eircode($eircode) {
+function validate_dublin_eircode($eircode) {
    $eircode = validate_form_input($eircode);
 
    if($eircode !== false) {
-      if (!preg_match('/^[a-zA-z][0-9]{2}\s?[a-zA-z0-9]{4}$/', $eircode)) {
+      if (!preg_match('/^[Dd][0-9]{2}\s?[a-zA-z0-9]{4}$/', $eircode)) {
          return false;
       }
    }
-
    return $eircode;
 }
 

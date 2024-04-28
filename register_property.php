@@ -1,5 +1,7 @@
 <?php
 require "session.php";
+require 'templates/header.php';
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -22,6 +24,9 @@ require_once $path_to_mysql_connect;
 $errors = [];
 $noError = true;
 
+// Global scope declaration
+$alreadyExists = false;
+
 //Get validate_form_input function
 require 'functions.php';
 
@@ -36,9 +41,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
     // Check and validate 'Eircode' field
     if (isset($_POST['eircode']) && !empty($_POST['eircode'])) {
-        $eircode = validate_eircode($_POST['eircode']);
+        $eircode = validate_dublin_eircode($_POST['eircode']);
         if ($eircode === false) {
             $errors[] = "Invalid Eircode format eg. D08 Y14X.";
+        } else {
+            // Check if a propery with this eircode already exists in the database
+            // Perform database search operation for property record
+            $stmt = $db_connection -> prepare("SELECT * FROM property WHERE eircode = ?");
+            $stmt->bind_param("s", $eircode);
+            $stmt -> execute();
+            $result = $stmt -> get_result();
+
+            if($result -> num_rows > 0) {
+                GLOBAL $alreadyExists;
+                $alreadyExists = true;
+            }
+            $stmt -> close();
         }
 
     } else {
@@ -88,27 +106,125 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     }
 
 
+    // Check the size of each image. (Don't check the type because document.createElement('img') let only select img ('jpg', 'jpeg', 'png', 'gif'))
+    $atLeastOneImg = false;
+    foreach ($_FILES["images"]["tmp_name"] as $key => $tmp_name) {
+        // Get the file name
+        $fileName = basename($_FILES["images"]["name"][$key]);
+
+        // Check if the size is valid (Max 3MB = 3 * 1024 * 1024 bytes)
+        $maxFileSize = 3 * 1024 * 1024; 
+        if ($_FILES["images"]["size"][$key] > $maxFileSize) {
+            $errors[] = "Image $fileName is not of a valid size (Max 3MB)";
+        } else {
+            if(!empty($fileName )){
+                $atLeastOneImg = true;
+            } 
+        }
+    }
+
+    // Proprty must have at least one image
+    if(!$atLeastOneImg) {
+         $errors[] = "Select at least one image";
+    }
+
+
+    if(!$alreadyExists) {
+        if(empty($errors) && $atLeastOneImg) {
+            if(!empty($address) && !empty($eircode) && !empty($rentalPrice) && !empty($numberOfbedrooms) && !empty($lengthOfTenancy) && !empty($description)) {
+                //Escape Inputs with the mysqli_real_escape_string.
+                $address = mysqli_real_escape_string($db_connection, $address);
+                $eircode = mysqli_real_escape_string($db_connection, $eircode);
+                $rentalPrice = mysqli_real_escape_string($db_connection, $rentalPrice);
+                $numOfBedrooms = mysqli_real_escape_string($db_connection, $numberOfbedrooms);
+                $lengthOfTenancy = mysqli_real_escape_string($db_connection, $lengthOfTenancy);
+                $description = mysqli_real_escape_string($db_connection, $description);
+                $landlordId = $_SESSION["user"]["id"];
+
+                $insertQuery = $db_connection->prepare("INSERT INTO property (address, eircode, rentalPrice, numOfBedrooms, lengthOfTenancy, description, landlordId) VALUES (?, ?, ?, ?, ?, ?, ?);");
+
+                $insertQuery->bind_param("ssdiisi", $address, $eircode, $rentalPrice, $numOfBedrooms, $lengthOfTenancy, $description, $landlordId);
+                $result = $insertQuery->execute();
+                $insertQuery->close();
+
+                //Get propertyId
+                $stmt = $db_connection->prepare("SELECT id FROM property WHERE eircode = ?");
+                $stmt->bind_param("s", $eircode);
+                $stmt->execute();
+                $result = $stmt -> get_result();
+                $stmt-> close();
+                
+                $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                $row = $rows[0];
+                $propertyId = $row['id'];
+                 echo "<p class mt-5>propertyId : $propertyId</p>";
+
+
+                if(empty($errors)) {
+                    // Define a directory with the appropriate property ID
+                    $targetDirectory = "propertyImages/$propertyId/";
+                    if (!file_exists($targetDirectory)) {
+                        mkdir("propertyImages/$propertyId/", 0777, true);
+                    }
+                    
+                    // Prepare the SQL statement
+                    $insertPhoto = $db_connection->prepare("INSERT INTO property_photo (propertyId, photo) VALUES (?, ?);");
+
+                    // Debug: Output the number of uploaded files
+                    //var_dump($_FILES);
+
+                    //Iterate through each uploaded image
+                    foreach ($_FILES["images"]["tmp_name"] as $key => $tmp_name) {
+                        // Get the file name
+                        $fileName = basename($_FILES["images"]["name"][$key]);
+                        // Define the target file path
+                        $targetFilePath = $targetDirectory . $fileName;
+
+                        // Move the file from temporary location to target location
+                        if (move_uploaded_file($_FILES["images"]["tmp_name"][$key], $targetFilePath)) {
+                            // Bind the property ID and file path parameters to the prepared statement
+                            $insertPhoto->bind_param("is", $propertyId, $targetFilePath);
+                            $insertPhoto->execute();
+                        } else {
+                            $errors[] = "Sorry, there was an error uploading your file.<br>";
+                        }
+                    }
+                    // Close the prepared statement
+                    $insertPhoto->close();
+
+                    header("Location: " . htmlspecialchars($_SERVER['PHP_SELF']) . "?registred=true");
+                    exit();  
+                } 
+
+            }
+        }
+    } else {
+        $message = <<<MESSAGE
+            <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+              <h4><strong>A property with this eircode already exists.</strong></h4>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>              
+            MESSAGE;
+        echo $message;
+    }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		 <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- connect bootstrap libraries -->
-        <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
-        <title>Register Property</title>
-        <link rel="stylesheet" href="style/style.css">
-	</head>
-
-    <body>
-        <main class="main">
-            <h2 class="text-center mt-3">Register New Property</h2>
+        <main class="main" id="registerPropertyMain">
+            <?php if(isset($_GET['registred']) && $_GET['registred'] == 'true'): ?>
+                <div class="alert alert-success text-center mt-3" role="alert">
+                    <h4 class="alert-heading">Well done!</h4>
+                    <h5>New property registred successfully</h5>
+                    <hr>
+                </div>
+            <?php endif; ?>
+            <h2 class="text-center">Register New Property</h2>
             <div class="container">
-                <form id="propertyRegistrationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="mt-3" method="POST" novalidate>
+                <form id="propertyRegistrationForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" class="mt-3" method="POST" enctype="multipart/form-data" novalidate>
                     <?php
-                     if (!empty($errors)) {
+                     if (!empty($errors) && !$alreadyExists) {
                         GLOBAL $noError;
                         $noError = false;
                         foreach ($errors as $error) {
@@ -166,43 +282,47 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                                 </textarea>
                             </div>
 
-                            <label for="images">Images:</label><br>
+                            <label for="images">Images (The recommended aspect ratio is 16:9):</label><br>
                             <button class="btn btn-info w-25 mb-2" type="button" onclick="document.getElementById('images').click();">Add</button>
-                            <input type="file" id="images" name="images[]" accept="image/*" style="display: none;" onchange="previewAndManageImages(event)">
+                            <input type="file" id="images" name="images[]" accept="image/*" multiple style="display: none;" onchange="previewAndManageImages(event)">
                             <div id="preview"></div>
 
                             <script>
                             function previewAndManageImages(event) {
-                              var preview = document.getElementById('preview');
-                              var files = event.target.files;
+                                var preview = document.getElementById('preview');
+                                var files = event.target.files;
+                                var input = document.getElementById('images');
+                                var selectedFiles = [];
 
-                              for (var i = 0; i < files.length; i++) {
-                                var file = files[i];
-                                var reader = new FileReader();
+                                // Clear existing previews
+                                preview.innerHTML = '';
 
-                                reader.onload = function(event) {
-                                  var img = document.createElement('img');
-                                  //img.setAttribute('width', '400');
-                                  //img.setAttribute('height', '340');
-                                  var removeButton = document.createElement('button');
-                                  img.setAttribute('class', 'preview-image');
-                                  img.src = event.target.result;
-                                  removeButton.setAttribute('class', 'remove-button');
-                                  removeButton.setAttribute('class', 'btn btn-outline-secondary rounded-circle');
-                                  removeButton.setAttribute('style', 'width: 2.4rem');
+                                for (var i = 0; i < files.length; i++) {
+                                    (function(file) { // Use a closure to capture the value of 'file'
+                                        var reader = new FileReader();
 
-                                  removeButton.innerHTML = '&#x2715;';
-                                  removeButton.onclick = function() {
-                                    this.parentElement.remove();
-                                  };
-                                  var container = document.createElement('div');
-                                  container.appendChild(removeButton);
-                                  container.appendChild(img);
-                                  preview.appendChild(container);
+                                        reader.onload = function(event) {
+                                            var img = document.createElement('img');
+                                            // ratio for property photos 16:9
+                                            img.setAttribute('width', '450');
+                                            img.setAttribute('height', '253');
+                                            img.setAttribute('style', 'margin-top: 0.5rem;');
+                                            img.setAttribute('class', 'preview-image');
+                                            img.src = event.target.result;
+                                            
+                                            var container = document.createElement('div');
+                                            container.appendChild(img);
+                                            preview.appendChild(container);
+
+                                            // Add the file to selectedFiles
+                                            selectedFiles.push(file);
+                                            // Update the files property of the input element
+                                            input.files = new FileList(selectedFiles);
+                                        }
+
+                                        reader.readAsDataURL(file);
+                                    })(files[i]); // Pass the current file to the closure
                                 }
-
-                                reader.readAsDataURL(file);
-                              }
                             }
                             </script>
                         </div>
