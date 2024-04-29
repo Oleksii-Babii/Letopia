@@ -1,7 +1,7 @@
  <?php
     require "session.php";
     require ('templates/header.php');
-
+    require ('functions.php');
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
@@ -50,8 +50,19 @@
             </button>
           </div>
         </div>
+        
         <div id="form-container">
             <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+            <?php
+                 if (!empty($errors)) {
+                    GLOBAL $noError;
+                      $noError = false;
+                    foreach ($errors as $error) {
+                        echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
+                        {$error}
+                    </div>";
+                    }
+                   } ?>
                 <div class="col-auto">
                     <label  class="font-weight-bold"for="staticEmail2" >Area:</label>
                     <input name="area" type="text" class="form-control" id="staticEmail2" value="" placeholder="e.g. D08">
@@ -122,12 +133,23 @@
             $noError = true;
 
             if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])){         
-                $area = $_POST['area']."%";
+                $area = validate_dublin_eirc($_POST['area'])."%";
+
                 $priceStart = $_POST['priceStart'];
                 $priceEnd = $_POST['priceEnd'];
                 $numberOfBedrooms = $_POST['optionTypeBedroom'];
                 $length = $_POST['optionType'];
                 length_validation($priceStart, $priceEnd);
+
+                if (!empty($errors)) {
+                    GLOBAL $noError;
+                      $noError = false;
+                    foreach ($errors as $error) {
+                        echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
+                        {$error}
+                    </div>";
+                    }
+                }
 
                 if($area == "%" && $priceEnd == "" && $priceStart == ""){
                     display_search_by_all_without_area_price($db_connection, $numberOfBedrooms, $length);
@@ -145,18 +167,26 @@
                     display_search_by_all_withEndAndL($db_connection, $priceEnd, $numberOfBedrooms, $length, $area);
                 }else{
                     display_search_by_all($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length, $area);
-                }
-                
-                // if($length == 3){
-
-                // }
-                // $length = $_POST['6'];
-                // $length = $_POST['12'];
+                }           
 
                // echo "area: ".$area ." priceStart: ". $priceStart ." priceEnd: ". $priceEnd ." numberOfBedrooms: ". $numberOfBedrooms ." length: ". $length;
             }else{
                 display_all_available($db_connection);
             }
+
+
+            function validate_dublin_eirc($eircode) {
+                $eircode = validate_form_input($eircode);
+             
+                if($eircode !== false) {
+                   if (!preg_match('/^[Dd][0-9]{2}$/', $eircode)) {
+                        Global $errors;
+                        $errors[] = "format is wrong";
+                      return false;
+                   }
+                }
+                return $eircode;
+             }
 
             function display_search_by_all_without_area($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length){
                 $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
@@ -179,7 +209,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -203,11 +233,11 @@
             
                     if ($result_set->num_rows > 0) {
                         while ($row = $result_set->fetch_assoc()) {
-                            echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -233,7 +263,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -304,7 +334,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -332,7 +362,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -361,7 +391,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -390,7 +420,7 @@
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
-                        echo "No results found.";
+                        
                     }
                 } else {
                     echo "Error executing the query: " . mysqli_error($db_connection);
@@ -399,7 +429,8 @@
 
             function length_validation($start, $end){
                 if($end > $start){
-                    $errors = 'Start of the price should be lower that end of the price';
+                    GLOBAL $errors;
+                    $errors[] = 'Start of the price should be lower that end of the price';
                 }
             }
             function display_all_available($db_connection){
@@ -449,37 +480,5 @@
     </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const searchForm = document.getElementById('search-form');
-    const formContainer = document.getElementById('form-container');
-
-    // Add an event listener for form submission
-    if (searchForm) {
-    searchForm.addEventListener('submit', function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Log a message to the console to check if the event listener is triggered
-        console.log('Form submitted');
-
-        // Scroll to the top of the form container
-        if (formContainer) {
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // Optionally, you can also focus on the first input field of the form
-        const firstInput = searchForm.querySelector('input');
-        if (firstInput) {
-            firstInput.focus();
-        }
-
-        // Submit the form data asynchronously using AJAX if needed
-        // Example: SubmitFormWithAjax();
-    });
-}
-
-});
-</script>
 </body>
 </html>
