@@ -211,7 +211,7 @@ function display_for_tenant_landlord(){
     <link rel="stylesheet" href="style/style.css">
     <title>Document</title>
 </head>
-<body style='margin-top: 10rem; margin-bottom:;'>
+<body style='margin-top: 10rem;'>
    <?php
      if (!empty($errors)) {
         GLOBAL $noError;
@@ -226,7 +226,6 @@ function display_for_tenant_landlord(){
 </body>
 
 <?php
-require 'templates/footer.php';
 ob_end_flush();
 ?>
 

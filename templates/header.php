@@ -10,12 +10,12 @@ function generate_nav_links() {
       // admin links
       $nav_links = [
         ['link' => 'index.php', 'text' => 'Home'],
-        ['link' => 'index_edit.php', 'text' => 'Edit Home'],
+        //['link' => 'index_edit.php', 'text' => 'Edit Home'],
         ['link' => 'register_property.php', 'text' => 'Register Property'],
-        ['link' => 'property_edit.php', 'text' => 'Property Edit'],
-        ['link' => 'inventory_details.php', 'text' => 'Inventory'],
-        ['link' => 'tenancies.php', 'text' => 'Tenancies'],
-        ['link' => 'landlords.php', 'text' => 'Landlords'],
+        //['link' => 'property_edit.php', 'text' => 'Property Edit'],
+        //['link' => 'inventory_details.php', 'text' => 'Inventory'],
+        //['link' => 'tenancies.php', 'text' => 'Tenancies'],
+        //['link' => 'landlords.php', 'text' => 'Landlords'],
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
         ['link' => 'contact_us_manage.php', 'text' => 'Messages'],
@@ -27,9 +27,9 @@ function generate_nav_links() {
       $nav_links = [
         ['link' => 'index.php', 'text' => 'Home'],
         ['link' => 'register_property.php', 'text' => 'Register Property'],
-        ['link' => 'property_edit.php', 'text' => 'Property Edit'],
-        ['link' => 'inventory_details.php', 'text' => 'Inventory'],
-        ['link' => 'landlord_account.php', 'text' => 'My Account'],
+        //['link' => 'property_edit.php', 'text' => 'Property Edit'],
+        //['link' => 'inventory_details.php', 'text' => 'Inventory'],
+        //['link' => 'landlord_account.php', 'text' => 'My Account'],
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
       ]; 
@@ -39,7 +39,7 @@ function generate_nav_links() {
       // tenant links
       $nav_links = [
         ['link' => 'index.php', 'text' => 'Home'],
-        ['link' => 'tenancy_account.php', 'text' => 'My Tenancy'],
+        //['link' => 'tenancy_account.php', 'text' => 'My Tenancy'],
         ['link' => 'testimonial.php', 'text' => 'Testimonials'],
         ['link' => 'contact_us.php', 'text' => 'Contact Us'],
       ];
