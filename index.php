@@ -1,44 +1,13 @@
  <?php
-require "session.php";
-require ('templates/header.php');
+    require "session.php";
+    require ('templates/header.php');
 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
-// // Connect to the database
-// // Check if we are on the live server or a local XAMPP environment
-// if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
-//     // Path for the Knuth server
-//     $path_to_mysql_connect = '../../../mysql_connect.php';
-// } else {
-//     // Path for the local XAMPP server
-//     $path_to_mysql_connect = 'mysql_connect.php';
-// }
-
-// // Require the mysql_connect.php file using the determined path
-// require_once $path_to_mysql_connect;
-
-// //dispaly_property_results();
-// function dispaly_property_results(){
-//     echo '
-//     <div class="container-catalog">
-//         <p>appartment1, Doderbank</p>
-//         <div >
-//             <img src="additionalResources\appartment1-slideshow.jpg" class="img-size">
-//             <div style=" width: 12rem;">
-//                 <p>$355,000 - Appartment</p>
-//                 <p>bespoke area dilighted to present this spacios one bed....</p><span id="more"><a href="#">More detailes &raquo;</a></span>
-                
-//             </div>
-//         </div>
-//     </div>
-    
-    
-//     ';
-// }
 ?> 
-
+ 
     <section>
         <h1 id="title">Deals of the week</h1>
         <div id="section-carusel">
@@ -84,49 +53,49 @@ require ('templates/header.php');
         <div id="form-container">
             <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="col-auto">
-                <label for="staticEmail2" >Area (e.g. D08):</label>
-                <input type="text" readonly class="form-control" id="staticEmail2" value="email@example.com">
+                    <label  class="font-weight-bold"for="staticEmail2" >Area:</label>
+                    <input name="area" type="text" class="form-control" id="staticEmail2" value="" placeholder="e.g. D08">
                 </div>
-                <div class="col-auto" style="width: 10rem;">
-                    <label for="inputPassword2" >Price Range:</label>
+                <div class="col-auto" style="width: 15rem;">
+                    <label class="font-weight-bold" for="inputPassword2" >Price Range:</label>
                     <div id="start-end"  style="display: flex; flex-direction: row;">
                     <div >
-                        <input type="number" class="form-control" id="inputPassword2" placeholder="start" >
+                        <input name="priceStart" type="number" class="form-control" id="inputPassword2" placeholder="start" >
                     </div>
                     <div style="margin: 1%;">
                         <p>-</p> 
                     </div>  
                     <div >
-                        <input type="number" class="form-control" id="inputPassword2" placeholder="end" >
+                        <input name="priceEnd" type="number" class="form-control" id="inputPassword2" placeholder="end" >
                     </div> 
                     </div>
                 </div>
                 <div class="col-auto">
-                    <label for="staticEmail2" >Number of bedrooms:</label>
-                    <input type="text" readonly class="form-control" id="staticEmail2" value="email@example.com">
-                </div>
-
-                <div class="col-auto">
-                    <label for="staticEmail2" >Length of tenancy:</label>
-                    <input type="text" readonly class="form-control" id="staticEmail2" value="email@example.com">
-                </div>
-                <div class="col-auto">
-                    <label for="optionType" class="font-weight-bold">Length of tenancy:</label>
-                    <select id="optionType" name="optionType" class="form-control">
-                        <option value="">1 week</option>
-                        <option value="">2 weeks</option>
-                        <option value="">1 month</option>
-                        <option value="">2 months</option>
-                        <option value="">3 months</option>
-                        <option value="" selected></option>
-                        <!-- <?php
-                            $options = array("", "1 week", "2 weeks", "1 month", "2 months", "3 months");
+                    <label class="font-weight-bold" for="optionTypeBedroom" >Number of bedrooms:</label>
+                    <!-- <input name="numberOfBedrooms" type="number" class="form-control" id="staticEmail2" value="" placeholder="1,2,3"> -->
+                    <select id="optionTypeBedroom" name="optionTypeBedroom" class="form-control">
+                        <?php
+                            $options = array(1, 2, 3);
                             foreach ($options as $option) 
                             {
                                 $selected = ($options == $option) ? 'selected' : '';
                                 echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
                             }
-                        ?> -->
+                        ?>
+                    </select>
+                </div>
+
+                <div class="col-auto">
+                    <label for="optionType" class="font-weight-bold">Length of tenancy:</label>
+                    <select id="optionType" name="optionType" class="form-control">
+                        <?php
+                            $options = array(3, 6, 12);
+                            foreach ($options as $option) 
+                            {
+                                $selected = ($options == $option) ? 'selected' : '';
+                                echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
+                            }
+                        ?>
                     </select>
                 </div>
                 <div class="form-group" id="btn-form">
@@ -150,43 +119,330 @@ require ('templates/header.php');
 
             // Require the mysql_connect.php file using the determined path
             require_once $path_to_mysql_connect;
-
+            $errors = [];
+            $noError = true;
             //echo "demo here";
 
             // $stmt = "SELECT DISTINCT * FROM property
             // inner join property_photo on property.id = property_photo.propertyId"; // Removed unnecessary parentheses
             if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])){
-                echo "Hello";
+                //echo "Hello";
                 //header("Location: inxex.php#form-container");
                 //exit();
-            }else{
-            $stmt = "SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
-                            (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
-                    FROM property";
-
-
-            $result = $db_connection->query($stmt);
-
-            if($result->num_rows > 0){
                 
-                while($row = $result->fetch_assoc()){
-                    //echo $row['id'] . " " . $row['address'] . " " . $row['eircode'] . " " . $row['rentalPrice'] . " " . $row['numOfBedrooms']." " . $row['photo']."<br>"; // Corrected concatenation and added proper spacing
-                    echo "
-                        <div class='container-catalog' style='margin: 3rem'>
-                            <p style='margin: 1rem;'>". $row['address']."</p>
-                            <div>
-                                <img src='". $row['photo']."' class='img-size'>
-                                <div>
-                                    <p style='margin: 1rem;'>". $row['rentalPrice'] . " - Apartment</p>
-                                    <p style='margin: 1rem;'>". $row['description'] . "</p>
-                                    <span ><a href='#' style='text-decoration: none;'><p style='text-align: right; margin: 1rem;' >More details &raquo;</p></a></span>                   
-                                </div>
-                            </div>
-                        </div>";
 
+                
+                $area = $_POST['area']."%";
+                //echo $area;
+                $priceStart = $_POST['priceStart'];
+                $priceEnd = $_POST['priceEnd'];
+                $numberOfBedrooms = $_POST['optionTypeBedroom'];
+                $length = $_POST['optionType'];
+                //length_validation($priceStart, $priceEnd);
+
+
+
+                if($area == "%" && $priceEnd == "" && $priceStart == ""){
+                    echo "area is empty";
+                    display_search_by_all_without_area_price($db_connection, $numberOfBedrooms, $length);
+                }else if($priceStart == "" && $priceEnd == ""){
+                    echo "price is empty";
+                    display_search_by_all_without_price($db_connection, $numberOfBedrooms, $length, $area);
+                }else if($area == "%" && $priceEnd == ""){
+                    echo "stelya";
+                    display_search_by_all_end($db_connection, $priceStart, $numberOfBedrooms, $length);
+                }else if($area == "%" && $priceStart == ""){
+                    echo "stelya";
+                    display_search_by_all_start($db_connection, $priceEnd, $numberOfBedrooms, $length);
+                }else if($area == "%"){
+                    echo "stelya";
+                    display_search_by_all_without_area($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length);
+                }else if($priceEnd == ""){
+                    echo "stelya";
+                    display_search_by_all_withStartAndL($db_connection, $priceStart, $numberOfBedrooms, $length, $area);
+                }else if($priceStart == ""){
+                    echo "stelya";
+                    display_search_by_all_withEndAndL($db_connection, $priceEnd, $numberOfBedrooms, $length, $area);
+                }else{
+                    display_search_by_all($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length, $area);
+                }
+                
+                // if($length == 3){
+
+                // }
+                // $length = $_POST['6'];
+                // $length = $_POST['12'];
+
+               // echo "area: ".$area ." priceStart: ". $priceStart ." priceEnd: ". $priceEnd ." numberOfBedrooms: ". $numberOfBedrooms ." length: ". $length;
+            }else{
+                display_all_available($db_connection);
+            }
+
+            function display_search_by_all_without_area($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE rentalPrice BETWEEN ? AND ? 
+                    AND numOfBedrooms = ? 
+                    AND lengthOfTenancy = ?");
+            
+                $stmt->bind_param("ssss", $priceStart, $priceEnd, $numberOfBedrooms, $length);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
                 }
             }
-        }
+            
+            function display_search_by_all_without_price($db_connection, $numberOfBedrooms, $length, $area){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE numOfBedrooms = ? 
+                    AND lengthOfTenancy = ? 
+                    AND eircode LIKE ?");
+            
+                $stmt->bind_param("sss", $numberOfBedrooms, $length, $area);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }            
+
+            function display_search_by_all_without_area_price($db_connection, $numberOfBedrooms, $length){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE numOfBedrooms = ? 
+                    AND lengthOfTenancy = ?");
+            
+                $stmt->bind_param("ss", $numberOfBedrooms, $length);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }     
+
+            function display_search_by_all($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length, $area){
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode,property.lengthOfTenancy, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
+                FROM property
+                WHERE rentalPrice BETWEEN ? AND ? 
+                    AND numOfBedrooms = ? 
+                    AND lengthOfTenancy = ? 
+                    AND eircode LIKE ?");
+            
+                $stmt->bind_param("sssss", $priceStart, $priceEnd, $numberOfBedrooms, $length, $area);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);                       
+                        }
+                    } else {
+                        echo "No results found.!";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }
+
+            function display_result($address, $photo, $rentalPrice, $description){
+                    echo "
+                        <div class='container-catalog' style='margin: 3rem'>
+                            <p style='margin: 1rem;'>". $address."</p>
+                                <div>
+                                    <img src='". $photo."' class='img-size'>
+                                        <div>
+                                            <p style='margin: 1rem;'>". $rentalPrice . " - Apartment</p>
+                                                <p style='margin: 1rem;'>". $description . "</p>
+                                                <span ><a href='#' style='text-decoration: none;'><p style='text-align: right; margin: 1rem;' >More details &raquo;</p></a></span>                   
+                                        </div>
+                                </div>
+                        </div>";
+            }
+            function display_search_by_all_start($db_connection, $priceEnd, $numberOfBedrooms, $length){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE rentalPrice <= ?  
+                    AND numOfBedrooms = ? 
+                    AND lengthOfTenancy = ?");
+            
+                $stmt->bind_param("sss", $priceEnd, $numberOfBedrooms, $length);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }
+
+            function display_search_by_all_end($db_connection, $priceStart, $numberOfBedrooms, $length){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE rentalPrice >= ?  
+                    AND numOfBedrooms = ? 
+                    AND lengthOfTenancy = ?");
+            
+                $stmt->bind_param("sss", $priceStart, $numberOfBedrooms, $length);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }
+
+            function display_search_by_all_withEndAndL($db_connection, $priceEnd, $numberOfBedrooms, $length, $area){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE rentalPrice <= ? 
+                AND numOfBedrooms = ? 
+                AND lengthOfTenancy = ?
+                AND eircode LIKE ?");
+            
+                $stmt->bind_param("ssss", $priceEnd, $numberOfBedrooms, $length, $area);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }
+
+            function display_search_by_all_withStartAndL($db_connection, $priceStart, $numberOfBedrooms, $length, $area){
+                $stmt = $db_connection->prepare("SELECT * 
+                FROM property
+                WHERE rentalPrice >= ? 
+                AND numOfBedrooms = ? 
+                AND lengthOfTenancy = ?
+                AND eircode LIKE ?");
+            
+                $stmt->bind_param("ssss", $priceStart, $numberOfBedrooms, $length, $area);
+            
+                $result = $stmt->execute();
+            
+                if ($result) {
+                    $result_set = $stmt->get_result();
+            
+                    if ($result_set->num_rows > 0) {
+                        while ($row = $result_set->fetch_assoc()) {
+                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
+                        }
+                    } else {
+                        echo "No results found.";
+                    }
+                } else {
+                    echo "Error executing the query: " . mysqli_error($db_connection);
+                }
+            }
+
+            function length_validation($start, $end){
+                if($end > $start){
+                    $errors = 'Start of the price should be lower that end of the price';
+                }
+            }
+            function display_all_available($db_connection){
+                $stmt = "SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
+                FROM property";
+
+
+                 $result = $db_connection->query($stmt);
+
+                if($result->num_rows > 0){
+                    
+                    while($row = $result->fetch_assoc()){
+                        //echo $row['id'] . " " . $row['address'] . " " . $row['eircode'] . " " . $row['rentalPrice'] . " " . $row['numOfBedrooms']." " . $row['photo']."<br>"; // Corrected concatenation and added proper spacing
+                        echo "
+                            <div class='container-catalog' style='margin: 3rem'>
+                                <p style='margin: 1rem;'>". $row['address']."</p>
+                                <div>
+                                    <img src='". $row['photo']."' class='img-size'>
+                                    <div>
+                                        <p style='margin: 1rem;'>". $row['rentalPrice'] . " - Apartment</p>
+                                        <p style='margin: 1rem;'>". $row['description'] . "</p>
+                                        <span ><a href='#' style='text-decoration: none;'><p style='text-align: right; margin: 1rem;' >More details &raquo;</p></a></span>                   
+                                    </div>
+                                </div>
+                            </div>";
+
+                    }
+                }
+            }
             ?>
     </div>
     </div>
@@ -204,6 +460,39 @@ require ('templates/header.php');
             <p class="text">Contact us</p>
         </div>
     </footer> -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchForm = document.getElementById('search-form');
+    const formContainer = document.getElementById('form-container');
+
+    // Add an event listener for form submission
+    if (searchForm) {
+    searchForm.addEventListener('submit', function (event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Log a message to the console to check if the event listener is triggered
+        console.log('Form submitted');
+
+        // Scroll to the top of the form container
+        if (formContainer) {
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Optionally, you can also focus on the first input field of the form
+        const firstInput = searchForm.querySelector('input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+
+        // Submit the form data asynchronously using AJAX if needed
+        // Example: SubmitFormWithAjax();
+    });
+}
+
+});
+</script>
 </body>
 </html>

@@ -48,7 +48,6 @@ main {
 
 
 #login , #signUp, #emailVerificationForm {
-
   background-color: #ffffff;
    margin: auto;
    border-radius: 0.5rem;
@@ -192,6 +191,7 @@ textarea { /* Adjust the width as needed */
   grid-template-columns: repeat(2, 1fr); /* Two columns with equal width */
   gap: 20px; /* Gap between grid items */
   justify-content: center; /* Center the grid */
+  text-decoration: none;
 }
 .container-catalog {
   background-color: white;
