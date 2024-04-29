@@ -72,7 +72,6 @@
                 </div>
                 <div class="col-auto">
                     <label class="font-weight-bold" for="optionTypeBedroom" >Number of bedrooms:</label>
-                    <!-- <input name="numberOfBedrooms" type="number" class="form-control" id="staticEmail2" value="" placeholder="1,2,3"> -->
                     <select id="optionTypeBedroom" name="optionTypeBedroom" class="form-control">
                         <?php
                             $options = array(1, 2, 3);
@@ -121,47 +120,28 @@
             require_once $path_to_mysql_connect;
             $errors = [];
             $noError = true;
-            //echo "demo here";
 
-            // $stmt = "SELECT DISTINCT * FROM property
-            // inner join property_photo on property.id = property_photo.propertyId"; // Removed unnecessary parentheses
-            if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])){
-                //echo "Hello";
-                //header("Location: inxex.php#form-container");
-                //exit();
-                
-
-                
+            if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])){         
                 $area = $_POST['area']."%";
-                //echo $area;
                 $priceStart = $_POST['priceStart'];
                 $priceEnd = $_POST['priceEnd'];
                 $numberOfBedrooms = $_POST['optionTypeBedroom'];
                 $length = $_POST['optionType'];
-                //length_validation($priceStart, $priceEnd);
-
-
+                length_validation($priceStart, $priceEnd);
 
                 if($area == "%" && $priceEnd == "" && $priceStart == ""){
-                    echo "area is empty";
                     display_search_by_all_without_area_price($db_connection, $numberOfBedrooms, $length);
                 }else if($priceStart == "" && $priceEnd == ""){
-                    echo "price is empty";
                     display_search_by_all_without_price($db_connection, $numberOfBedrooms, $length, $area);
                 }else if($area == "%" && $priceEnd == ""){
-                    echo "stelya";
                     display_search_by_all_end($db_connection, $priceStart, $numberOfBedrooms, $length);
                 }else if($area == "%" && $priceStart == ""){
-                    echo "stelya";
                     display_search_by_all_start($db_connection, $priceEnd, $numberOfBedrooms, $length);
                 }else if($area == "%"){
-                    echo "stelya";
                     display_search_by_all_without_area($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length);
                 }else if($priceEnd == ""){
-                    echo "stelya";
                     display_search_by_all_withStartAndL($db_connection, $priceStart, $numberOfBedrooms, $length, $area);
                 }else if($priceStart == ""){
-                    echo "stelya";
                     display_search_by_all_withEndAndL($db_connection, $priceEnd, $numberOfBedrooms, $length, $area);
                 }else{
                     display_search_by_all($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length, $area);
@@ -179,7 +159,8 @@
             }
 
             function display_search_by_all_without_area($db_connection, $priceStart, $priceEnd, $numberOfBedrooms, $length){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE rentalPrice BETWEEN ? AND ? 
                     AND numOfBedrooms = ? 
@@ -206,7 +187,8 @@
             }
             
             function display_search_by_all_without_price($db_connection, $numberOfBedrooms, $length, $area){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE numOfBedrooms = ? 
                     AND lengthOfTenancy = ? 
@@ -232,7 +214,8 @@
             }            
 
             function display_search_by_all_without_area_price($db_connection, $numberOfBedrooms, $length){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE numOfBedrooms = ? 
                     AND lengthOfTenancy = ?");
@@ -301,7 +284,8 @@
                         </div>";
             }
             function display_search_by_all_start($db_connection, $priceEnd, $numberOfBedrooms, $length){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE rentalPrice <= ?  
                     AND numOfBedrooms = ? 
@@ -328,7 +312,8 @@
             }
 
             function display_search_by_all_end($db_connection, $priceStart, $numberOfBedrooms, $length){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE rentalPrice >= ?  
                     AND numOfBedrooms = ? 
@@ -355,7 +340,8 @@
             }
 
             function display_search_by_all_withEndAndL($db_connection, $priceEnd, $numberOfBedrooms, $length, $area){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE rentalPrice <= ? 
                 AND numOfBedrooms = ? 
@@ -383,7 +369,8 @@
             }
 
             function display_search_by_all_withStartAndL($db_connection, $priceStart, $numberOfBedrooms, $length, $area){
-                $stmt = $db_connection->prepare("SELECT * 
+                $stmt = $db_connection->prepare("SELECT property.id, property.address, property.eircode, property.rentalPrice, property.description, property.numOfBedrooms, 
+                (SELECT photo FROM property_photo WHERE property.id = property_photo.propertyId LIMIT 1) AS photo
                 FROM property
                 WHERE rentalPrice >= ? 
                 AND numOfBedrooms = ? 
