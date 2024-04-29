@@ -194,12 +194,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 
                     //After successful registration send an email confirmation
                     // Email subject
+
+                    
                     $subject = "Property Registration Notification";
                     // Email message with HTML markup
                     $message = "
                     <html>
                     <head>
-                    <title>Test Email</title>
+                    <title>Welcome to Letopia</title>
                     <style>
                       body {
                         font-family: Arial, sans-serif;
@@ -214,19 +216,31 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
                         border-radius: 5px;
                         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                       }
+                      .footer {
+                        text-align: center;
+                        margin-top: 20px;
+                      }
+                      .footer img {
+                        width: 100px; /* Adjust the width as needed */
+                        height: auto;
+                      }
                     </style>
                     </head>
                     <body>
                       <div class='container'>
                         <h1>Dear $firstName,</h1>
-                        <p>You received this message because you recently registered a property in your Letopia account.<br/></p>
-                        <p>If you have any quastions, reach out to us at letopia@gmail.com</p>
+                        <p>You received this message because you recently registered a property in your Letopia account.</p>
+                        <p>If you have any questions, reach out to us at <a href='mailto:letopia@gmail.com'>letopia@gmail.com</a></p>
                         <p>Kind regards,</p>
                         <h3>Letopia Support Team</h3>
+                      </div>
+                      <div class='footer'>
+                        <img src='logoFooter.png' alt='Letopia Logo'>
                       </div>
                     </body>
                     </html>
                     ";
+
 
                     $from = "letopia@gmail.com";
 

@@ -50,7 +50,7 @@
             </button>
           </div>
         </div>
-        
+
         <div id="form-container">
             <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
             <?php
@@ -233,7 +233,6 @@
             
                     if ($result_set->num_rows > 0) {
                         while ($row = $result_set->fetch_assoc()) {
-                            //echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
@@ -482,3 +481,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
 </body>
 </html>
+
