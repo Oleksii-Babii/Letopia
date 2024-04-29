@@ -203,7 +203,7 @@
             
                     if ($result_set->num_rows > 0) {
                         while ($row = $result_set->fetch_assoc()) {
-                            echo $row['rentalPrice'] . " " . $row['numOfBedrooms'] . " " . $row['lengthOfTenancy'] . " " . $row['eircode'] . "<br>";
+                            
                             display_result($row['address'] , $row['photo'], $row['rentalPrice'],$row['description']);
                         }
                     } else {
@@ -434,52 +434,5 @@
     </div>
     </div>
 
-    <footer>
-        <div class="footer-container">
-            <p class="text">&copy;2024 Letopia, Inc</p>
-        </div>
-
-        <div class="footer-container">
-            <img src="additionalResources/footer-logo.png" alt="logo for footer" id="footer-logo">
-        </div>
-
-        <div class="footer-container">
-            <p class="text">Contact us</p>
-        </div>
-    </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const searchForm = document.getElementById('search-form');
-    const formContainer = document.getElementById('form-container');
-
-    // Add an event listener for form submission
-    if (searchForm) {
-    searchForm.addEventListener('submit', function (event) {
-        // Prevent the default form submission behavior
-        event.preventDefault();
-
-        // Log a message to the console to check if the event listener is triggered
-        console.log('Form submitted');
-
-        // Scroll to the top of the form container
-        if (formContainer) {
-            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // Optionally, you can also focus on the first input field of the form
-        const firstInput = searchForm.querySelector('input');
-        if (firstInput) {
-            firstInput.focus();
-        }
-
-        // Submit the form data asynchronously using AJAX if needed
-        // Example: SubmitFormWithAjax();
-    });
-}
-
-});
-</script>
-</body>
-</html>
+<?php
+?> 
