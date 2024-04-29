@@ -1,6 +1,6 @@
 <?php
 require "session.php";
-require 'templates/header.php';
+//require 'templates/header.php';
 require_once 'functions.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -34,10 +34,11 @@ print '\n';
 
 if ($role == 'admin') {
     echo '<h1>Admin role</h1>';
-    display_testimonial($db_connection);
+    display_testimonial_admin($db_connection);
 } else if ($role == 'landlord' || $role == 'tenant') {
     echo '<h1>tenant role</h1>';
     display_for_tenant_landlord();
+    display_testimonial($db_connection);
 } else{
     echo '<h1>public role</h1>';
     display_testimonial($db_connection);
@@ -53,6 +54,47 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
     addTestimonial($db_connection, $service_name, $currentDate, $comment, $authorId);
 }
 
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])){
+    $option = $_POST['option'];
+    if($option == 'on'){
+        $option = true;
+    }else{
+        $option = false;
+    }
+    $id = $_POST['id'];
+    echo $option ." ". $id;
+    update_show($db_connection,$option, $id);
+    header('Location: testimonial.php');
+}
+
+function update_show($db_connection,$option, $id){
+    $stmt = $db_connection -> prepare(
+        "UPDATE testimonial SET isApproved = ? WHERE id = ?"
+    );
+
+    $stmt->bind_param("ss",  $option, $id);
+
+    if($stmt->execute()){
+    }else{
+        $message = 'Error updating customer: '.$stmt->error;
+    }
+    $stmt -> close();
+}
+
+function display_testimonial_admin($db_connection){
+    $stmt = "SELECT testimonial.id AS testimonial_id, testimonial.serviceName, testimonial.date, testimonial.comment, user.firstName, user.lastName, testimonial.isApproved 
+             FROM testimonial
+             INNER JOIN user ON testimonial.authorId = user.id";
+
+    $result = $db_connection->query($stmt);
+
+    if($result->num_rows > 0){
+        while($row = $result->fetch_assoc()){
+            display_testimonial_result_admin($row['testimonial_id'], $row['serviceName'], $row['date'], $row['comment'], $row['firstName'], $row['lastName'], $row['isApproved']);
+        }
+    }
+}
+
 function display_testimonial($db_connection){
     $stmt = ("SELECT * FROM testimonial
     inner join user on testimonial.authorId = user.id");
@@ -62,10 +104,41 @@ function display_testimonial($db_connection){
         if($result->num_rows > 0){
 
         while($row = $result -> fetch_assoc()){
-                display_testimonial_result($row['serviceName'], $row['date'], $row['comment'], $row['firstName'], $row['lastName']);
+                display_testimonial_result($row['serviceName'], $row['date'], $row['comment'], $row['firstName'], $row['lastName'],$row['isApproved']);
             }
         }
 }
+
+
+
+function display_testimonial_result_admin($id, $service_name, $date, $comment, $firstName, $lastName , $isChecked ){
+    echo "       
+    <div class='d-flex justify-content-center mt-5'>  
+    <form class='card' id='loginForm'  method='POST' novalidate>
+    <input type='hidden' name='id' value='$id'> <!-- Hidden input field with name 'id' -->         
+    <div class='card'style='width: 50rem'>
+        <div class='card-body'>
+          <h5 class='card-title'>" . $service_name . "</h5>
+          <p class='card-text'>" . $comment . "</p>
+          <span style='display: flex; justify-content: center;'>" . $date . "</span><span style='display: flex; justify-content: right;'>" . $firstName . " " . $lastName . "</span>
+        </div>
+        
+        <div class='form-check form-switch'>
+            <input name= 'option' class='form-check-input' type='checkbox' role='switch' id='flexSwitchCheckDefault' " . ($isChecked ? 'checked' : '') . ">
+            <label class='form-check-label' for='flexSwitchCheckDefault'>Show</label>
+        </div>
+    </div>
+    <div class='form-group text-center mt-3 pr-3 pl-3' style='width: 10rem; display: flex; justify-content: center; margin: 1rem;'>
+       <div>
+                <input type='submit' name='save' class='btn btn-outline-primary w-100' value='Save' >
+                </div>
+        </div> 
+    </form>
+    </div>
+    
+    ";
+}
+
 function display_testimonial_result($service_name, $date, $comment, $firstName, $lastName){
     echo "
     <div class='d-flex justify-content-center mt-5'>           
@@ -74,7 +147,7 @@ function display_testimonial_result($service_name, $date, $comment, $firstName, 
           <h5 class='card-title'>" . $service_name . "</h5>
           <p class='card-text'>" . $comment . "</p>
           <span style='display: flex; justify-content: center;'>" . $date . "</span><span style='display: flex; justify-content: right;'>" . $firstName . " " . $lastName . "</span>
-        </div>
+        </div>       
     </div>
     </div>";
 }
@@ -150,11 +223,19 @@ function display_for_tenant_landlord(){
     <title>Document</title>
 </head>
 <body>
+   <?php
+     if (!empty($errors)) {
+        GLOBAL $noError;
+          $noError = false;
+        foreach ($errors as $error) {
+            echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
+            {$error}
+        </div>";
+        }
+       } ?>
     
     
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
-<?php
-display_testimonial($db_connection);
-?>
