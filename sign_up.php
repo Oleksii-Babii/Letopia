@@ -273,9 +273,12 @@ ALERT;
                         </form>
                     </div>
                 </div>
-                 <h5 class="text-center mt-4">Already have an account? <a href="login.php">Login here</a></h5>
+                 <h5 class="text-center mt-4 mb-4">Already have an account? <a href="login.php">Login here</a></h5>
                  <?php endif; ?>
             </div>
         </main>
-    </body>
-</html>
+
+
+<?php
+    require 'templates/footer.php';
+?>

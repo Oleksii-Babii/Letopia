@@ -435,4 +435,5 @@
     </div>
 
 <?php
-?> 
+    require 'templates/footer.php';
+?>

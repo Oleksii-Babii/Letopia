@@ -173,10 +173,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])) {
 }
 
 ?>
-        <main id="forgotPassword">
+        <main id="forgotPassword" style="margin-bottom: 16rem;">
             <div class="container"> 
                 <div class="row">
-                    <div class="col-md-4 mt-3 w-50" id="signUp">
+                    <div class="col-md-4 mt-5 w-50" id="signUp">
                         <h2 class="text-center mt-2">Reset Password</h2>
                         <p class="text-center text-secondary">Confirm your email to reset your password.</p>
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  method="POST" novalidate>
@@ -203,5 +203,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])) {
                 </div>
             </div>
         </main>
-    </body>
-</html>
+
+<?php
+    require 'templates/footer.php';
+?>

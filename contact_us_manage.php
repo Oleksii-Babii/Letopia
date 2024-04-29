@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css" media="screen">
-    
-    <title>Document</title>
+<?php
+require 'templates/header.php';
+?>
 
-    <link rel="stylesheet" href="style/style.css">
-</head>
-<body>
-    <main>
+    <main style="margin-bottom: 20rem;">
         <div id="table-container" >
         <table class="table table-dark table-hover">
             <thead>
@@ -62,6 +53,8 @@
           </table>
         </div>
     </main>
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+
+<?php
+require 'templates/footer.php';
+?>
