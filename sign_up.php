@@ -141,7 +141,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signUp'])) {
             $_SESSION['role'] = $role;
 
 
-            header("Location: email_verification.php");
+            header("Location: sign_up.php?approvedEmail=true");
             exit();
             
         }

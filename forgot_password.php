@@ -20,7 +20,7 @@ if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
 require_once $path_to_mysql_connect;
 
 
-
+$firstName = '';
 // Create an empty array to store errors
 $errors = [];
 
@@ -42,6 +42,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])) {
 	        $result = $stmt->get_result();
 	        if ($result->num_rows == 0) {
 	        	$errors[] = "No User exist with that email. <a href='sign_up.php'>Sign up</a>";
+	        } else {
+	        	 // Fetch the result as an associative array
+				 $user = $result->fetch_assoc();
+				 // Store the first name in session
+				$firstName = $user['firstName'];
+				$_SESSION['email'] = $email;
 	        }
 	        $stmt->close();
 	    }
@@ -62,7 +68,92 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])) {
 
     	if ($stmt ->execute()) {
 
-    		$mail = require "mailer.php";
+
+		// Include the mailer.php file and instantiate the $mail object
+		$mail = require_once "mailer.php";
+
+		// Check if $mail is an object
+		if (is_object($mail)) {
+		    // Set the sender email address
+		    $mail->setFrom("letopia@gmail.com");
+		    $mail->addAddress($email);
+
+		    // Set the email subject
+		    $mail->Subject = "Password Reset";
+
+		    // Set the email body
+			$mail->Body = "
+			<html>
+			<head>
+			<title>Welcome to Letopia</title>
+			<style>
+			  body {
+			    font-family: Arial, sans-serif;
+			    background-color: #f2f2f2;
+			    color: #333;
+			  }
+			  .container {
+			    width: 80%;
+			    margin: 0 auto;
+			    padding: 20px;
+			    background-color: #fff;
+			    border-radius: 5px;
+			    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+			  }
+			  .footer {
+			    text-align: center;
+			    margin-top: 20px;
+			  }
+			  .footer img {
+			    width: 100px; /* Adjust the width as needed */
+			    height: auto;
+			  }
+			  .reset-button {
+			    background-color: #4CAF50;
+			    border: none;
+			    color: white;
+			    padding: 15px 32px;
+			    text-align: center;
+			    text-decoration: none;
+			    display: inline-block;
+			    font-size: 16px;
+			    margin: 4px 2px;
+			    cursor: pointer;
+			    border-radius: 5px;
+			  }
+			</style>
+			</head>
+			<body>
+			  <div class='container'>
+			    <h1>Dear $firstName,</h1>
+			    <p>If you want to reset your password, click the button below:</p>
+			    <a href='http://localhost/Scripts/Letopia/reset_password.php?token=$token' class='reset-button'>Reset Password</a>
+			    <p>The link is valid for 1 hour.</p>
+			    <p>If you have any questions, reach out to us at <a href='mailto:letopia@gmail.com'>letopia@gmail.com</a></p>
+			    <p>Kind regards,</p>
+			    <h3>Letopia Support Team</h3>
+			  </div>
+			  <div class='footer'>
+			    <img src='additionalResources/footer-logo.png' alt='Letopia Logo'>
+			  </div>
+			</body>
+			</html>
+			";
+
+		    try {
+		        // Try to send the email
+		        $mail->send();
+		        echo "Email sent successfully!";
+		    } catch (Exception $e) {
+		        // If an error occurs, catch the Exception and display the error message
+		        echo "Message could not be sent. {$mail->ErrorInfo}";
+		    }
+		} else {
+		    echo "Error: Failed to instantiate PHPMailer object.";
+		}
+		       
+
+
 
     		// Email subject
 			// $subject = "Password Reset";
@@ -74,10 +165,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])) {
 
     		
     		//Redirect
-
-    		echo "Message sent, please check your indox.";
-
-
+			header("Location: email_verification.php?type=reset&email=$email");
     	}
 
     

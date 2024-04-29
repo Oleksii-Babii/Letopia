@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 28, 2024 at 10:28 PM
+-- Generation Time: Apr 29, 2024 at 10:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,7 +44,6 @@ CREATE TABLE `appliances` (
 --
 
 INSERT INTO `appliances` (`applianceId`, `applianceType`, `brand`, `modelNumber`, `serialNumber`, `purchaseDate`, `warrantyExpirationDate`, `costOfAppliance`, `userId`) VALUES
-(28, 'Washing Machine', 'LG', 'WMX-5000', 'F91R457', '2020-02-10', '2024-02-10', 400.50, 52),
 (29, 'Refrigerator', 'Samsung', 'RF28R7351SR', 'RF/28HFEDBSR-AA', '2021-04-25', '2024-04-25', 499.99, 15),
 (30, 'Refrigerator', 'Electrolux', 'EI23BC82SS', 'EF123456789', '2018-02-13', '2020-02-13', 249.99, 15),
 (31, 'Freezer', 'Whirlpool', 'WRS325SDHZ', '901SDF', '2020-11-25', '2022-11-25', 250.00, 15),
@@ -287,27 +286,30 @@ CREATE TABLE `user` (
   `lastName` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(128) NOT NULL,
-  `role` enum('landlord','tenant','admin') NOT NULL
+  `role` enum('landlord','tenant','admin') NOT NULL,
+  `reset_token_hash` varchar(64) DEFAULT NULL,
+  `reset_token_expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstName`, `lastName`, `password`, `email`, `role`) VALUES
-(2, 'John', 'Smith', '$2y$10$DAwzv4zCUtbv2.yyHEd2DuJWMRhj2wOqqtWwIofbixSFYsSSzmwAi', 'john.smith@gmail.com', 'tenant'),
-(3, 'Emily', 'Johnson', '$2y$10$BelkduIEhu8dPwjgcCWF2.rvQY6Az.sDOx/.0WLfDCE8yr5ALPmjS', 'emily.johnson@gmail.com', 'tenant'),
-(4, 'Jane', 'Doe', '$2y$10$cpUNmeAdYhYxCWmHUzgkaOySURkFMNWjFtWmfN0nylNPcJNUL5Eee', 'jane.doe@gmail.com', 'tenant'),
-(5, 'Alice', 'Murphy', '$2y$10$EYo1N9FfKeCOZwm8t1oHlu3wkIa1U.SZueGd1d.y.CS4Nkmeps/x.', 'alice.murphy@gmail.com', 'tenant'),
-(6, 'Michael', 'Johnson', '$2y$10$eSVf7Ie3hL0cuvF4W7u1KuXMmj.jl5YrYNv4hc3HcGxgwXo0ssS3m', 'michael.johnson@gmail.com', 'tenant'),
-(7, 'Daniel', 'Martinez', '$2y$10$peZY/xqZj91IY6QDkNiyfuo2RVOhE1HA8yks0fzng1yMIqzElb5/S', 'daniel.martinez@gamil.com', 'tenant'),
-(8, 'Sophia', 'Davis', '$2y$10$6.O86kHFWFX8/DmXx4AjxOhenlyypyKN8aHfApsXIPCYHkQGEmCgC', 'sophia.davis@gmail.com', 'tenant'),
-(9, 'Olivia', 'Garcia', '$2y$10$svCPV1s2l1BUSfWARpTID.dOycQimCPEsIYGrtX7swnHtE7BMGqMG', 'olivia.garcia@gmail.com', 'landlord'),
-(10, 'Ryan', 'Garcia', '$2y$10$WJwoq7c8el6Mk3MIyyziJO3Y3uHBvz/H/v1vb4BK/LmLamFP/tTH6', 'ryan.garcia@gmail.com', 'landlord'),
-(11, 'Liam', 'O’Neill', '$2y$10$PXiUK8EIQdutBbNidhG5uuBOXE7x1zlzgPiVQVFHzRyAadND6XWE6', 'liam.neill@gmail.com', 'tenant'),
-(13, 'Oleksii', 'Babii', '$2y$10$yFtY39kcAeg9B.RF5m258.EwPpqvLuNQmuXzlITuyYXKdiKZZzU6i', 'babiy.olexiy@ukr.net', 'admin'),
-(14, 'David', 'Wilson', '$2y$10$7fBCMI4tUHXl7Qb/dvqaaOn6xCI87HFIKUIYPAo4.rA4gFdZUK.sC', 'david.wilson@gmail.com', 'landlord'),
-(15, 'Sarah', 'Taylor', '$2y$10$HQGpOmcCamaLURkFwGz6buQ3.DxacsN2OZPnT1ecp9Z9l0zstaNSC', 'sarah.taylor@gmail.com', 'landlord');
+INSERT INTO `user` (`id`, `firstName`, `lastName`, `password`, `email`, `role`, `reset_token_hash`, `reset_token_expires_at`) VALUES
+(2, 'John', 'Smith', '$2y$10$DAwzv4zCUtbv2.yyHEd2DuJWMRhj2wOqqtWwIofbixSFYsSSzmwAi', 'john.smith@gmail.com', 'tenant', NULL, NULL),
+(3, 'Emily', 'Johnson', '$2y$10$BelkduIEhu8dPwjgcCWF2.rvQY6Az.sDOx/.0WLfDCE8yr5ALPmjS', 'emily.johnson@gmail.com', 'tenant', NULL, NULL),
+(4, 'Jane', 'Doe', '$2y$10$cpUNmeAdYhYxCWmHUzgkaOySURkFMNWjFtWmfN0nylNPcJNUL5Eee', 'jane.doe@gmail.com', 'tenant', NULL, NULL),
+(5, 'Alice', 'Murphy', '$2y$10$EYo1N9FfKeCOZwm8t1oHlu3wkIa1U.SZueGd1d.y.CS4Nkmeps/x.', 'alice.murphy@gmail.com', 'tenant', NULL, NULL),
+(6, 'Michael', 'Johnson', '$2y$10$eSVf7Ie3hL0cuvF4W7u1KuXMmj.jl5YrYNv4hc3HcGxgwXo0ssS3m', 'michael.johnson@gmail.com', 'tenant', NULL, NULL),
+(7, 'Daniel', 'Martinez', '$2y$10$peZY/xqZj91IY6QDkNiyfuo2RVOhE1HA8yks0fzng1yMIqzElb5/S', 'daniel.martinez@gamil.com', 'tenant', 'b7de3b24aa238d1529b74391e52aacb7b41f4981202a6acb49191720e4653e3f', '2024-04-29 01:50:04'),
+(8, 'Sophia', 'Davis', '$2y$10$6.O86kHFWFX8/DmXx4AjxOhenlyypyKN8aHfApsXIPCYHkQGEmCgC', 'sophia.davis@gmail.com', 'tenant', NULL, NULL),
+(9, 'Olivia', 'Garcia', '$2y$10$svCPV1s2l1BUSfWARpTID.dOycQimCPEsIYGrtX7swnHtE7BMGqMG', 'olivia.garcia@gmail.com', 'landlord', NULL, NULL),
+(10, 'Ryan', 'Garcia', '$2y$10$WJwoq7c8el6Mk3MIyyziJO3Y3uHBvz/H/v1vb4BK/LmLamFP/tTH6', 'ryan.garcia@gmail.com', 'landlord', NULL, NULL),
+(11, 'Liam', 'O’Neill', '$2y$10$PXiUK8EIQdutBbNidhG5uuBOXE7x1zlzgPiVQVFHzRyAadND6XWE6', 'liam.neill@gmail.com', 'tenant', NULL, NULL),
+(13, 'Oleksii', 'Babii', '$2y$10$FUAR0CWKDIQtxHpDrrHljuWEuFL8/kCfwzTwdRgM9eXNi01Rnfm.i', 'babiy.olexiy@ukr.net', 'admin', NULL, NULL),
+(14, 'David', 'Wilson', '$2y$10$7fBCMI4tUHXl7Qb/dvqaaOn6xCI87HFIKUIYPAo4.rA4gFdZUK.sC', 'david.wilson@gmail.com', 'landlord', NULL, NULL),
+(15, 'Sarah', 'Taylor', '$2y$10$HQGpOmcCamaLURkFwGz6buQ3.DxacsN2OZPnT1ecp9Z9l0zstaNSC', 'sarah.taylor@gmail.com', 'landlord', NULL, NULL),
+(16, 'Olivia', 'Anderson', '$2y$10$AHDleyiGli/SZTvrfZENb.Zf3BM49KZk.CefjYbjtbtfph99EP8Dm', 'olivia.anderson@example.com', 'tenant', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -446,7 +448,8 @@ ALTER TABLE `testimonial`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reset_token_hash` (`reset_token_hash`);
 
 --
 -- Indexes for table `userlogin`
@@ -504,7 +507,7 @@ ALTER TABLE `testimonial`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `userlogin`

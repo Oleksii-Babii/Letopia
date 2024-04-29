@@ -126,12 +126,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 						<input type="password" id="password" name="password"class="form-control">
 					</div>
 
-					<div class="form-check text-start ml-3">
+<!-- 					<div class="form-check text-start ml-3">
 				     	<input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe" value="true">
 				     	<label class="form-check-label" for="flexCheckDefault"> Remember for 30 days</label>
-				    </div>
+				    </div> -->
 
-				    <div class="form-group text-center mt-3 pr-3 pl-3">
+				    <div class="form-group text-center mt-5 pr-3 pl-3">
 	                   	    <input type="submit" name="login" class="btn btn-outline-primary w-100" value="Log in">
 	                </div> 
 

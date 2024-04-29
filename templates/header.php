@@ -73,7 +73,7 @@ function generate_nav_links() {
 </head>
 <body >
   <!-- <header class="fixed-top"> -->
-    <header class="">
+    <header class="fixed-top">
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid" >
               <a href="index.php"><img src="additionalResources/logo.png" alt="logo image"></a>

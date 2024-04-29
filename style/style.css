@@ -7,7 +7,7 @@ main {
 }
 
 
-#signUpMain, #registerPropertyMain,#forgotPassword {
+#signUpMain, #registerPropertyMain, #forgotPassword, #emailVerification {
   margin-top: 7rem;
 }
 

@@ -1,4 +1,5 @@
 <?php 
+require "session.php";
 require ('templates/header.php');
 
 // Connect to the database
@@ -13,28 +14,31 @@ if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
 
 // Require the mysql_connect.php file using the determined path
 require_once $path_to_mysql_connect;
-
-$token = $_GET['token'];
-$tolen_hash = hash("sha256", $token);
-
-$stmt = $db_connection->prepare("SELECT * FROM user WHERE reset_token_hash = ?");
-
-$stmt ->bind_param("s",$tolen_hash);
-
-$stmt -> execute();
-$result = $stmt -> get_result();
-$user = $result ->fetch_assoc();
-
-if($user === null) {
-	die("token not found");
-}
-
-if(strtotime($user["reset_token_expires_at"]) <= time()) {
-	die("Token has expired");
+if(isset($_GET['token'])) {
+$_SESSION['token'] = $_GET['token'];
 }
 
 // Checks if form is submitted via POST and sanitizes input to prevent XSS attacks.
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset'])) {
+
+    $token = $_SESSION['token'];
+    $tolen_hash = hash("sha256", $token);
+
+    $stmt = $db_connection->prepare("SELECT * FROM user WHERE reset_token_hash = ?");
+
+    $stmt ->bind_param("s",$tolen_hash);
+
+    $stmt -> execute();
+    $result = $stmt -> get_result();
+    $user = $result ->fetch_assoc();
+
+    if($user === null) {
+        die("token not found");
+    }
+
+    if(strtotime($user["reset_token_expires_at"]) <= time()) {
+        die("Token has expired");
+    }
 
 	// Validate password
     $passwordAcceptable = false;
@@ -72,9 +76,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset'])) {
     	 $stmt -> bind_param("ss", $passwordHash, $user["id"]);
     	 $stmt -> execute();
 
-    	 echo "Password updated. You can now login.";
-
-
+    	 $updated = true;
 
 
     }
@@ -86,7 +88,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset'])) {
  <main id="forgotPassword">
             <div class="container"> 
                 <div class="row">
-                    <div class="col-md-4 mt-3 w-50" id="signUp">
+                    <?php if(isset($updated)): ?>
+                        <div class="alert alert-success" role="alert">
+                              <h3>Password updated. You can now <a href="login.php">Log In</a>.</h3>
+                        </div>
+                    <?php else: ?>  
+                    <div class="col-md-4 mt-3 w-50" id="signUp">                    
                         <h2 class="text-center mt-2">Reset Password</h2>
                         <p class="text-center text-secondary">Enter your new password.</p>
                         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"  method="POST" novalidate>
@@ -116,6 +123,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['reset'])) {
                             </div>
                         </form>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
