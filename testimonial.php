@@ -1,6 +1,7 @@
 <?php
+ob_start();
 require "session.php";
-//require 'templates/header.php';
+require 'templates/header.php';
 require_once 'functions.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -19,38 +20,25 @@ if ($_SERVER['SERVER_NAME'] == 'knuth.griffith.ie') {
 // Require the mysql_connect.php file using the determined path
 require_once $path_to_mysql_connect;
 
+if(isset($_SESSION["user"]["role"])){
+    $role = $_SESSION["user"]["role"];
 
-// $firstName = $_SESSION["user"]["firstName"];
-// $lastName = $_SESSION["user"]["lastName"];
-$role = $_SESSION["user"]["role"];
-print '\n';
-print '\n';
-
-
-
-//
-// echo "<p class='mt-5'>Info:</p>";
-// echo "$firstName $lastName $role";
-
-if ($role == 'admin') {
-    echo '<h1>Admin role</h1>';
-    display_testimonial_admin($db_connection);
-} else if ($role == 'landlord' || $role == 'tenant') {
-    echo '<h1>tenant role</h1>';
-    display_for_tenant_landlord();
-    display_testimonial($db_connection);
-} else{
-    echo '<h1>public role</h1>';
+    if ($role == 'admin') {
+        display_testimonial_admin($db_connection);
+    } else if ($role == 'landlord' || $role == 'tenant') {
+        display_for_tenant_landlord();
+        display_testimonial($db_connection);
+    } 
+}else{
     display_testimonial($db_connection);
 }
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
     $comment = validate_form_input($_POST['comment']);
     $service_name = validate_form_input($_POST['service_name']);
-    $currentDate = date('Y-m-d'); // Format: Year-Month-Day Hour:Minute:Second
-    $authorId = $_SESSION['user']['id'];
-// Print the current date and time
-    echo "Current Date and Time: " . $currentDate . " ". $authorId;  
+    $currentDate = date('Y-m-d'); 
+    // Format: Year-Month-Day Hour:Minute:Second
+    $authorId = $_SESSION['user']['id']; 
     addTestimonial($db_connection, $service_name, $currentDate, $comment, $authorId);
 }
 
@@ -62,7 +50,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['save'])){
         $option = false;
     }
     $id = $_POST['id'];
-    echo $option ." ". $id;
     update_show($db_connection,$option, $id);
     header('Location: testimonial.php');
 }
@@ -104,8 +91,10 @@ function display_testimonial($db_connection){
         if($result->num_rows > 0){
 
         while($row = $result -> fetch_assoc()){
+            if($row['isApproved'] == true){
                 display_testimonial_result($row['serviceName'], $row['date'], $row['comment'], $row['firstName'], $row['lastName'],$row['isApproved']);
             }
+        }
         }
 }
 
@@ -113,7 +102,7 @@ function display_testimonial($db_connection){
 
 function display_testimonial_result_admin($id, $service_name, $date, $comment, $firstName, $lastName , $isChecked ){
     echo "       
-    <div class='d-flex justify-content-center mt-5'>  
+    <div class='d-flex justify-content-center mt-5' >  
     <form class='card' id='loginForm'  method='POST' novalidate>
     <input type='hidden' name='id' value='$id'> <!-- Hidden input field with name 'id' -->         
     <div class='card'style='width: 50rem'>
@@ -177,9 +166,9 @@ function addTestimonial($db_connection, $service_name, $currentDate, $comment, $
 
 function display_for_tenant_landlord(){
     echo "<main class='d-flex justify-content-center mt-5'>
-        <div id='login'>
+        <div id='login' >
             <h2 class='text-center'>Create Testimonial</h2>
-            <form id='loginForm' action='" . htmlspecialchars($_SERVER['PHP_SELF']) . "' method='POST' novalidate>";
+            <form style='margin:2rem' id='loginForm' action='" . htmlspecialchars($_SERVER['PHP_SELF']) . "' method='POST' novalidate>";
     
     // PHP section should not be within the echo
     if (!empty($errors)) {
@@ -222,7 +211,7 @@ function display_for_tenant_landlord(){
     <link rel="stylesheet" href="style/style.css">
     <title>Document</title>
 </head>
-<body>
+<body style='margin-top: 10rem'>
    <?php
      if (!empty($errors)) {
         GLOBAL $noError;
@@ -233,9 +222,9 @@ function display_for_tenant_landlord(){
         </div>";
         }
        } ?>
-    
-    
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>
+<?php
+ob_end_flush();
+?>
