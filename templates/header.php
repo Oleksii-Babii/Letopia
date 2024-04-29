@@ -72,7 +72,8 @@ function generate_nav_links() {
     <title>Letopia</title>
 </head>
 <body >
-    <header class="fixed-top">
+  <!-- <header class="fixed-top"> -->
+    <header class="">
         <nav class="navbar navbar-expand-lg bg-light">
             <div class="container-fluid" >
               <a href="index.php"><img src="additionalResources/logo.png" alt="logo image"></a>

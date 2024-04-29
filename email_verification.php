@@ -72,7 +72,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['continue'])) {
 			<div class="container mt-5" id="emailVerificationForm">
 				<div class="d-flex justify-content-center align-items-center flex-column">
 				<figure class="mt-5">
-					<img src="emailcon.png" alt="✉">
+					<img src="additionalResources/emailcon.png" alt="✉">
 				</figure>
 				<h1>Verify your email address</h1>
 				<h3>An email with a verification code has been sent to</h3>
