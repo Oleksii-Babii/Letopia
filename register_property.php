@@ -397,3 +397,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
         </main>
     </body>
 </html>
+<?php
+    require 'templates/footer.php';
+?>

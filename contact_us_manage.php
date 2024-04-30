@@ -2,7 +2,7 @@
 require 'templates/header.php';
 ?>
 
-    <main style="margin-bottom: 20rem;">
+    <main style="margin-bottom: 5rem;">
         <div id="table-container" >
         <table class="table table-dark table-hover">
             <thead>

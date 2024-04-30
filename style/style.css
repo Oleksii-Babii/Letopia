@@ -6,7 +6,7 @@ main {
     margin: auto;
 }
 
-#signUpMain, #registerPropertyMain, #forgotPassword, #emailVerification, #contact_us{
+#signUpMain, #registerPropertyMain, #forgotPassword, #emailVerification , #contact_us{
   margin-top: 7rem;
 }
 

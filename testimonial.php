@@ -102,7 +102,7 @@ function display_testimonial($db_connection){
 
 function display_testimonial_result_admin($id, $service_name, $date, $comment, $firstName, $lastName , $isChecked ){
     echo "       
-    <div class='d-flex justify-content-center mt-5' >  
+    <div class='d-flex justify-content-center mt-5' style='margin-bottom: 3rem'>  
     <form class='card' id='loginForm'  method='POST' novalidate>
     <input type='hidden' name='id' value='$id'> <!-- Hidden input field with name 'id' -->         
     <div class='card'style='width: 50rem'>
@@ -130,7 +130,7 @@ function display_testimonial_result_admin($id, $service_name, $date, $comment, $
 
 function display_testimonial_result($service_name, $date, $comment, $firstName, $lastName){
     echo "
-    <div class='d-flex justify-content-center mt-5'>           
+    <div class='d-flex justify-content-center mt-5' style='margin-bottom: 3rem'>           
     <div class='card'style='width: 50rem'>
         <div class='card-body'>
           <h5 class='card-title'>" . $service_name . "</h5>
@@ -224,7 +224,9 @@ function display_for_tenant_landlord(){
        } ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
-
+<?php
+    require 'templates/footer.php';
+?>
 <?php
 ob_end_flush();
 ?>

@@ -103,9 +103,9 @@ function generate_nav_links() {
                     echo $button;
                     } else {
                       $buttons = <<<BUTTONS
-                      <div class="d-grid gap-2 d-md-block">
+                      <div class="d-grid gap-2 d-md-block" >
                           <a href="login.php">
-                            <button type="button" class="btn btn-warning">Log in</button>
+                            <button type="button" class="btn btn-warning" style="margin-right: 1rem;">Log in</button>
                           </a>
 
                           <a href="sign_up.php">

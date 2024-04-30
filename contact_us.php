@@ -33,15 +33,15 @@ function addContact($db_connection, $name, $email, $phone, $message){
 
     if ($result) {
         //Data inserted successfully. Display the corresponding message
+        GLOBAL $success;
         $success = <<<SUCCESS
-        <div class="alert alert-success text-center" role="alert">
+        <div class="alert alert-success text-center" role="alert" >
             <h4 class="alert-heading">Congratulations!</h4>
             <h5>Your message is sent to us.</h5>
             <hr>
         </div>
         SUCCESS;
-        
-        echo $success;
+        // echo $success;
     } else {
         echo "<p class='error'>Something went wrong: '.$insertQuery->error.'</p>";
     }
@@ -97,8 +97,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
 ?>
 
     <main id="contact_us" class="d-flex justify-content-center mt-5" >
-        <div id="login">
-            <h2 class="text-center" id="contact_us">Contact us</h2>
+        <div id="login" style='margin-bottom: 3rem; margin-top: 5rem;'>        
+            <h2 class="text-center" >Contact us</h2>
             <p class="text-center text-secondary">Enter your account details below.</p>
             <form id="loginForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" novalidate>
                 <?php
@@ -109,7 +109,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
                         echo "<div class='alert alert-danger text-center mb-1 ml-1 mr-1' role='alert'>
                         {$error}
                     </div>";
-                    }
+                    }    
+                   }else{
+                    echo $success;
                    } ?>
 
                 <div class="form-group mr-3 ml-3">
@@ -134,7 +136,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['send'])){
 
                 <div class="form-group text-center mt-3 pr-3 pl-3">
                            <input type="submit" name="send" class="btn btn-outline-primary w-100" value="Send">
-                </div> 
+                </div>
             </form>
         </div>
     </main>

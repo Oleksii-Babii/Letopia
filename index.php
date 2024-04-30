@@ -65,32 +65,31 @@
                    } ?>
                 <div class="col-auto">
                     <label  class="font-weight-bold"for="staticEmail2" >Area:</label>
-                    <input name="area" type="text" class="form-control" id="staticEmail2" value="" placeholder="e.g. D08">
+                    <input name="area" type="text" class="form-control" id="staticEmail2" value="<?php if(isset($_POST['area']))echo $_POST['area'];?>" placeholder="e.g. D08">
                 </div>
                 <div class="col-auto" style="width: 15rem;">
                     <label class="font-weight-bold" for="inputPassword2" >Price Range:</label>
                     <div id="start-end"  style="display: flex; flex-direction: row;">
                     <div >
-                        <input name="priceStart" type="number" class="form-control" id="inputPassword2" placeholder="start" >
+                        <input name="priceStart" type="number" class="form-control" id="inputPassword2" placeholder="start" value="<?php if(isset($_POST['priceStart']))echo $_POST['priceStart'];?>">
                     </div>
                     <div style="margin: 1%;">
                         <p>-</p> 
                     </div>  
                     <div >
-                        <input name="priceEnd" type="number" class="form-control" id="inputPassword2" placeholder="end" >
+                        <input name="priceEnd" type="number" class="form-control" id="inputPassword2" placeholder="end" value="<?php if(isset($_POST['priceEnd']))echo $_POST['priceEnd'];?>">
                     </div> 
                     </div>
                 </div>
                 <div class="col-auto">
-                    <label class="font-weight-bold" for="optionTypeBedroom" >Number of bedrooms:</label>
+                    <label class="font-weight-bold" for="optionTypeBedroom">Number of bedrooms:</label>
                     <select id="optionTypeBedroom" name="optionTypeBedroom" class="form-control">
                         <?php
-                            $options = array(1, 2, 3);
-                            foreach ($options as $option) 
-                            {
-                                $selected = ($options == $option) ? 'selected' : '';
-                                echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
-                            }
+                        $options = array(1, 2, 3);
+                        foreach ($options as $option) {
+                            $selected = ($_POST['optionTypeBedroom'] == $option) ? 'selected' : ''; // Check if the submitted value matches the option
+                            echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
+                        }
                         ?>
                     </select>
                 </div>
@@ -99,12 +98,11 @@
                     <label for="optionType" class="font-weight-bold">Length of tenancy:</label>
                     <select id="optionType" name="optionType" class="form-control">
                         <?php
-                            $options = array(3, 6, 12);
-                            foreach ($options as $option) 
-                            {
-                                $selected = ($options == $option) ? 'selected' : '';
-                                echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
-                            }
+                        $options = array(3, 6, 12);
+                        foreach ($options as $option) {
+                            $selected = ($_POST['optionType'] == $option) ? 'selected' : ''; // Check if the submitted value matches the option
+                            echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
+                        }
                         ?>
                     </select>
                 </div>
@@ -464,27 +462,13 @@
     </div>
     </div>
 
-<<<<<<< HEAD
+
 <?php
     require 'templates/footer.php';
 ?>
-=======
-    <footer>
-        <div class="footer-container">
-            <p class="text">&copy;2024 Letopia, Inc</p>
-        </div>
 
-        <div class="footer-container">
-            <img src="additionalResources/footer-logo.png" alt="logo for footer" id="footer-logo">
-        </div>
-
-        <div class="footer-container">
-            <p class="text">Contact us</p>
-        </div>
-    </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>    
 </body>
 </html>
 
->>>>>>> 4062aa6fadc2d9ff8c615f7ae0870c497bcdedcf
