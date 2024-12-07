@@ -201,3 +201,9 @@ textarea { /* Adjust the width as needed */
 .container-catalog p {
   margin-bottom: 0.5rem;
 }
+
+
+
+.carousel-caption h5, .carousel-caption p {
+  color: white; /* White text */
+}
